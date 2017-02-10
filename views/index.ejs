@@ -1,0 +1,124 @@
+<html>
+	<head>
+		<title>Welcome to NP Finder</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+		<style>
+		#map{
+			width: 100%;
+			height:600px;
+		}
+		#index_bng{
+			width: 100%;
+			height: 700px;
+			background: url('../Bryce_as_index.jpg');
+			background-size: 100% 900px;
+			display: block;
+			text-align: center;
+		}
+		#search{
+			width:50%;
+			height:180px;
+			top:400px;
+			left:25%;
+			background-color: rgba(128,128,128,0.5);
+			position: relative;
+			border-radius: 10px;
+		}
+		h1{
+			margin-top: 0;
+		}
+		.form-control{
+			width:150px;
+		}
+		</style>
+	</head>
+	
+	<body>
+		<% include ../views/layout %>
+		<div id = 'index_bng'>
+			<h1 style="font-family: 'Slabo 27px', serif;color:white;top:350px;font-size: 70px;position: absolute;width:100%">Welcome to National Park Finder!</h1>
+			<div id = 'search'>
+				<div class='container' style="position: relative;width:initial;">
+					<h2 style="font-family: 'Slabo 27px', serif;color:white">Find park by</h2>
+					<select class="form-control" style="left:150px;position: relative;float:left">
+						<option selected="selected">--By State</option>
+						<% for(var i = 0;i<states.length;i++){%>
+							<option value=<% states[i].abbr%>><%= states[i].name%></option>
+						<% } %>
+					</select>
+					<select class="form-control" style="right:150px;position: relative;float: right;">
+						<option selected="selected">--By activity--</option>
+						<% for(var i = 0;i<activities.length;i++){%>
+							<option value=<% activities[i].activity_id%>><%= activities[i].activity_name%></option>
+						<% } %>
+					</select>
+					<button class="btn btn-info" style="width:200px;height:40px;top: 50px;position: relative;"><a href="/" style="font-family: 'Slabo 27px', serif;font-size: 22px">Search</a></button>
+				</div>
+			</div>
+		</div>
+		<div id="map"></div>
+		<script>
+		function initMap() {
+    var myLatLng = {lat: 37.09024, lng: -95.712891};
+     var customMapType = new google.maps.StyledMapType([
+      {
+        stylers: [
+          {hue: '#4A9797'},
+          {gamma: 0.5},
+          {weight: 0.5}
+        ]
+      },
+      {
+        featureType: 'water',
+        stylers: [{color: '#0D3752'}]
+      }
+    ], {
+      name: 'Custom Style'
+  });
+  var customMapTypeId = 'custom_style';
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    scrollwheel: true,
+    zoom: 4,
+    mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
+    }
+  });
+  	var infowindow = new google.maps.InfoWindow();
+  	var park_names = [];
+  	park_names = <%- JSON.stringify(park_name)%>;
+	var latitude = [];
+	latitude = <%- JSON.stringify(latitude)%>;
+	var longitude = [];
+	longitude = <%- JSON.stringify(longitude)%>;
+	var website = [];
+	website = <%- JSON.stringify(website)%>;
+  	for(var i = 0;i<latitude.length;i++){
+	  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
+	  	marker = new google.maps.Marker({
+	        map:map,
+	        position:pos
+	    });
+	    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
+		google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+			return function() {
+				infowindow.setContent(contentString);
+				infowindow.open(map, marker);
+		}
+  })(marker,contentString));
+	}
+  map.mapTypes.set(customMapTypeId, customMapType);
+  map.setMapTypeId(customMapTypeId);
+    } 
+    </script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
+  async defer></script>
+	</body>
+</html>
