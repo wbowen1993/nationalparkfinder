@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+		<style>
+			#bg{
+				height:500px;
+				width:100%;
+			}
+		</style>
+	</head>
+	<body>
+		<% include ../views/layout %>
+		<div id="bg" style="background: url(<%= bgImg%>);
+				background-size: cover;">
+		<h1 style="font-size: 70px;font-family: 'Bungee Shade', cursive;text-align: center;top:250px;position:absolute;color:white!important;width:100%"><%= key_words%></h1>
+		</div>
+	</body>
+</html>

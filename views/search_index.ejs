@@ -12,6 +12,41 @@
 			width: 100%;
 			height:600px;
 		}
+		body{
+			background-color: #e6e9ef;
+			font-family: 'Slabo 27px', serif;
+			text-align: center;
+		}
+		table{
+			margin-top:40px;
+			text-align: center;
+			font-size: 36px;
+		}
+		.table>tbody>tr>td{
+			vertical-align: middle;
+		}
+		.index{
+			background-color: #0D3752;
+			color: white!important;
+			border-radius: 10px;
+			width:100px;
+			vertical-align: middle;
+		}
+		tr{
+			height:100px;
+			vertical-align: middle;
+		}
+		.name{
+			width:1000px;
+			vertical-align: middle;
+		}
+		.btn{
+			width: 120px;
+			height:60px;
+		} 
+		a{
+			text-decoration: none!important;
+		}
 		</style>
 		<script type="text/javascript">
 			function getURLParameter(name) {
@@ -21,72 +56,87 @@
     </head>
     <body>
 	    <% include ../views/layout %>
-		<div id="map"></div>
-		<script>
-		function getURLParameter(name) {
-				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
-			};
-		var state_q = getURLParameter('state');
-		var activity_q = getURLParameter('activity');
-		function initMap() {
-		    var myLatLng = {lat: 37.09024, lng: -95.712891};
-		     var customMapType = new google.maps.StyledMapType([
-		      {
-		        stylers: [
-		          {hue: '#4A9797'},
-		          {gamma: 0.5},
-		          {weight: 0.5}
-		        ]
-		      },
-		      {
-		        featureType: 'water',
-		        stylers: [{color: '#0D3752'}]
-		      }
-		    ], {
-		      name: 'Custom Style'
-		  });
-  var customMapTypeId = 'custom_style';
 
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: myLatLng,
-    scrollwheel: true,
-    zoom: 4,
-    mapTypeControlOptions: {
-      mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
-    }
-  });
-  	var infowindow = new google.maps.InfoWindow();
-  	var park_names = [];
-  	park_names = <%- JSON.stringify(park_name)%>;
-	var latitude = [];
-	latitude = <%- JSON.stringify(latitude)%>;
-	var longitude = [];
-	longitude = <%- JSON.stringify(longitude)%>;
-	var website = [];
-	website = <%- JSON.stringify(website)%>;
-	var state = [];
-	state = <%- JSON.stringify(state)%>;
-  	for(var i = 0;i<latitude.length;i++){
-  		if(state_q!=''&&state_q!=state[i])
-  			continue;
-	  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
-	  	marker = new google.maps.Marker({
-	        map:map,
-	        position:pos
-	    });
-	    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
-		google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
-			return function() {
-				infowindow.setContent(contentString);
-				infowindow.open(map, marker);
-		}
-  })(marker,contentString));
-	}
-  map.mapTypes.set(customMapTypeId, customMapType);
-  map.setMapTypeId(customMapTypeId);
-    } 
-    </script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
-  async defer></script>
+		<div id="map"></div>
+		<h1 style="font-size: 50px;font-family: 'Slabo 27px', serif;margin-top: 80px;margin-bottom:40px;text-align: center" id="res_title">	  	
+		</h1>
+		<div class="container">
+			<table id="result_table" class="table table-condensed" style="margin-bottom: 50px">
+			</table>
+		</div>
+		<script>
+			function getURLParameter(name) {
+					return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+				};
+			var state_q = getURLParameter('state');
+			var res_title = document.getElementById('res_title');
+			if(state_q!='')
+				res_title.innerHTML = "Search result for National Park in "+ state_q;
+			else
+				res_title.innerHTML = "Search result for National Park in America";
+			var activity_q = getURLParameter('activity');
+			function initMap() {
+			    var myLatLng = {lat: 37.09024, lng: -95.712891};
+			    var customMapType = new google.maps.StyledMapType([
+				{
+					stylers: [
+					  {hue: '#4A9797'},
+					  {gamma: 0.5},
+					  {weight: 0.5}
+					]
+				},
+			      {
+			        featureType: 'water',
+			        stylers: [{color: '#0D3752'}]
+			      }
+			    ], {
+			      name: 'Custom Style'
+				});
+				var customMapTypeId = 'custom_style';
+				var map = new google.maps.Map(document.getElementById('map'), {
+					center: myLatLng,
+					scrollwheel: true,
+					zoom: 4,
+					mapTypeControlOptions: {
+					  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
+					}
+				});
+			  	var infowindow = new google.maps.InfoWindow();
+			  	var park_names = [];
+			  	park_names = <%- JSON.stringify(park_name)%>;
+				var latitude = [];
+				latitude = <%- JSON.stringify(latitude)%>;
+				var longitude = [];
+				longitude = <%- JSON.stringify(longitude)%>;
+				var website = [];
+				website = <%- JSON.stringify(website)%>;
+				var state = [];
+				state = <%- JSON.stringify(state)%>;
+				var count = 0;
+			  	for(var i = 0;i<latitude.length;i++){
+			  		if(state_q!=''&&state_q!=state[i])
+			  			continue;
+			  		count+=1;
+				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
+				  	marker = new google.maps.Marker({
+				        map:map,
+				        position:pos
+				    });
+				    var result_table = document.getElementById('result_table');
+				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+				    contentString = '<a href='+ website[i]+'>'+encodeURIComponent(park_names[i])+'</a>';
+					google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+						return function() {
+							infowindow.setContent(contentString);
+							infowindow.open(map, marker);
+						}
+					})(marker,contentString));
+				}
+				map.mapTypes.set(customMapTypeId, customMapType);
+				map.setMapTypeId(customMapTypeId);
+		    } 
+	    </script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
+	  async defer></script>
   </body>
   </html>

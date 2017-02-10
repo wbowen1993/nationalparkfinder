@@ -12,6 +12,7 @@ var park_name = [];
 var latitude = [];
 var longitude = [];
 var website = [];
+var official_website = [];
 // Connect to the db
 MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info", function(err, db) {
   if(!err) {
@@ -74,6 +75,7 @@ request(url, function(error, response, html){
 	     });
     }
 });
+
 
 router.get('/search_index',function(req,res,next){
 	res.render('search_index',{states: states,activities:activities,park_name:park_name,latitude:latitude,longitude:longitude,website:website,state:state});
