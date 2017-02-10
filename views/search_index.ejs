@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+		<style>
+		#map{
+			width: 100%;
+			height:600px;
+		}
+		</style>
+		<script type="text/javascript">
+			function getURLParameter(name) {
+				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+			}
+		</script>
+    </head>
+    <body>
+	    <% include ../views/layout %>
+		<div id="map"></div>
+		<script>
+		function getURLParameter(name) {
+				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+			};
+		var state_q = getURLParameter('state');
+		var activity_q = getURLParameter('activity');
+		function initMap() {
+		    var myLatLng = {lat: 37.09024, lng: -95.712891};
+		     var customMapType = new google.maps.StyledMapType([
+		      {
+		        stylers: [
+		          {hue: '#4A9797'},
+		          {gamma: 0.5},
+		          {weight: 0.5}
+		        ]
+		      },
+		      {
+		        featureType: 'water',
+		        stylers: [{color: '#0D3752'}]
+		      }
+		    ], {
+		      name: 'Custom Style'
+		  });
+  var customMapTypeId = 'custom_style';
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    scrollwheel: true,
+    zoom: 4,
+    mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
+    }
+  });
+  	var infowindow = new google.maps.InfoWindow();
+  	var park_names = [];
+  	park_names = <%- JSON.stringify(park_name)%>;
+	var latitude = [];
+	latitude = <%- JSON.stringify(latitude)%>;
+	var longitude = [];
+	longitude = <%- JSON.stringify(longitude)%>;
+	var website = [];
+	website = <%- JSON.stringify(website)%>;
+	var state = [];
+	state = <%- JSON.stringify(state)%>;
+  	for(var i = 0;i<latitude.length;i++){
+  		if(state_q!=''&&state_q!=state[i])
+  			continue;
+	  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
+	  	marker = new google.maps.Marker({
+	        map:map,
+	        position:pos
+	    });
+	    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
+		google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+			return function() {
+				infowindow.setContent(contentString);
+				infowindow.open(map, marker);
+		}
+  })(marker,contentString));
+	}
+  map.mapTypes.set(customMapTypeId, customMapType);
+  map.setMapTypeId(customMapTypeId);
+    } 
+    </script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
+  async defer></script>
+  </body>
+  </html>
