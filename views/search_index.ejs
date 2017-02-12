@@ -70,7 +70,7 @@
 				};
 			var state_q = getURLParameter('state');
 			var res_title = document.getElementById('res_title');
-			if(state_q!='')
+			if(state_q!=null)
 				res_title.innerHTML = "Search result for National Park in "+ state_q;
 			else
 				res_title.innerHTML = "Search result for National Park in America";
@@ -112,9 +112,11 @@
 				website = <%- JSON.stringify(website)%>;
 				var state = [];
 				state = <%- JSON.stringify(state)%>;
+				var image_url = [];
+				image_url = <%- JSON.stringify(image_url)%>;
 				var count = 0;
 			  	for(var i = 0;i<latitude.length;i++){
-			  		if(state_q!=''&&state_q!=state[i])
+			  		if(state_q!=null&&state_q!=state[i])
 			  			continue;
 			  		count+=1;
 				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
@@ -123,7 +125,7 @@
 				        position:pos
 				    });
 				    var result_table = document.getElementById('result_table');
-				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px"></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
 				    contentString = '<a href='+ website[i]+'>'+encodeURIComponent(park_names[i])+'</a>';
 					google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
 						return function() {

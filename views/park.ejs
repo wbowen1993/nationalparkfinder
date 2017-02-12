@@ -1,25 +1,129 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<!-- font -->
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
-		<!-- Latest compiled and minified CSS -->
+		<link href="https://fonts.googleapis.com/css?family=Libre+Franklin:600" rel="stylesheet">
+
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 
-<!-- Latest compiled and minified JavaScript -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+		<script src="../js/jquery-3.1.1.min.js"></script>
 		<style>
 			#bg{
-				height:500px;
+				height:600px;
 				width:100%;
+				transition: background 0.5s linear;
+			    -moz-transition: background 0.5s linear; /* Firefox 4 */
+			    -webkit-transition: background 0.5s linear; /* Safari and Chrome */
+			    -o-transition: background 0.5s linear; /* Opera */
+			}
+			button{
+			    margin-top: 250px;
+			    height: 100px;
+			    width: 50px;
+			    background: aliceblue;
+			    border: none;
+			    opacity: 0.6;
+			    font-size: xx-large;
+			}
+			button:hover{
+				opacity: 0.4;
+			}
+			h2{
+				margin-top: 50px;
+				margin-bottom: 15px;
+			}
+			tr{
+				height:50px;
+				text-align: center;
+				font-size: 20px;
+				/*font-family: 'Libre Franklin', sans-serif;*/
+				border-radius: 4px;
+				opacity: 1;
+				background: url('../img/weather-bg.png') no-repeat center center fixed;
+				box-shadow: 0px 0px 5px #0d3752;
+				/*-webkit-box-shadow: 0px 0px 5px #0D3752;*/
+			   /*-moz-box-shadow: 0px 0px 5px #0D3752;*/
+			}
+			tr:hover{
+				opacity: 0.9;
+			}
+			.list-group-item{
+				font-size: 20px;
+				border:none;
+				background:transparent;
 			}
 		</style>
 	</head>
 	<body>
 		<% include ../views/layout %>
-		<div id="bg" style="background: url(<%= bgImg%>);
+		<div id="bg" style="background: url(<%= bgImg[0]%>) no-repeat center center;
 				background-size: cover;">
-		<h1 style="font-size: 70px;font-family: 'Bungee Shade', cursive;text-align: center;top:250px;position:absolute;color:white!important;width:100%"><%= key_words%></h1>
+		<h1 style="font-size: 70px;font-family: 'Bungee Shade', cursive;
+		text-align: center;
+		top:320px;
+		position:absolute;
+		color:white!important;
+		width:100%;
+		text-shadow: 3px 3px #000000;"><%= key_words%></h1>
+		<script type="text/javascript">
+			var index = 0;
+			function prevImg(){
+				if(index==0){
+					index=2;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[2])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";
+				}
+				else if(index==1){
+					index--;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[0])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";	
+				}
+				else{
+					index--;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[1])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";	
+				}
+			}
+			function nextImg(){
+				if(index==0){
+					index++;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[1])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";
+				}
+				else if(index==1){
+					index++;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[2])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";	
+				}
+				else{
+					index=0;
+					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[0])%>+"') no-repeat center center";
+					document.getElementById('bg').style.backgroundSize = "cover";
+				}
+			}
+			</script>
+		<button id="left" style="float: left;" onclick="prevImg()">&#10094;</button>
+		<button id="right" style="float: right;" onclick="nextImg()">&#10095;</button>
+		</div>
+		<div class="container" style="margin-bottom: 100px">
+			<h2 style="font-size: 60px;text-align: center;font-family: 'Slabo 27px', serif;color: #0D3752">Weather</h2>
+			<hr style="height:5px;border-radius:5px;color:#0D3752;background-color:#0D3752;" />
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
+			<% for(var i = 0;i<5;i++){%>
+				<tr>
+					<td><%= time[i]%></td>
+					<td><img src="<%= weather_code[i]%>" style="width:50px"></td>
+					<td><%= weather[i]%></td>
+					<td><%= min_temperature[i]%>~<%= max_temperature[i]%></td>
+					<td><%= wind[i]%></td>
+				</tr>
+			<% } %>
+			</table>
+			<h2 style="font-size: 60px;text-align: center;font-family: 'Slabo 27px', serif;color: #0D3752">Attraction</h2>
+			<hr style="height:5px;border-radius:5px;color:#0D3752;background-color:#0D3752;" />
 		</div>
 	</body>
 </html>

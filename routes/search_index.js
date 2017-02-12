@@ -4,6 +4,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
+var opn = require('opn');
 
 var states;
 var activities;
@@ -13,6 +14,7 @@ var latitude = [];
 var longitude = [];
 var website = [];
 var official_website = [];
+var image_url = [];
 // Connect to the db
 MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info", function(err, db) {
   if(!err) {
@@ -39,6 +41,9 @@ request(url, function(error, response, html){
         //var state = [];
 	     $('.wikitable tr th>a').each(function(){
 	     	park_name.push($(this).text());
+	     });
+	     $('.wikitable tr th+td img').each(function(){
+	     	image_url.push($(this).attr('src'));
 	     });
 		$('.latitude').each(function(){
 			var temp = $(this).text();
@@ -77,8 +82,10 @@ request(url, function(error, response, html){
 });
 
 
+
+
 router.get('/search_index',function(req,res,next){
-	res.render('search_index',{states: states,activities:activities,park_name:park_name,latitude:latitude,longitude:longitude,website:website,state:state});
+	res.render('search_index',{states: states,activities:activities,park_name:park_name,latitude:latitude,longitude:longitude,website:website,state:state,image_url:image_url});
 });
 
 module.exports = router;
