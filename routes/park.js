@@ -12,7 +12,15 @@ var yelp = new Yelp({
   token: 'xLKAOVr6r0V-58xWtc2J161uklEmpO9v',
   token_secret: 'Nx96dUQJRosnDp7qSy_RZZE1vRQ',
 });
-var restaurant = [];
+var restaurant_name = [];
+var restaurant_rating = [];
+var restaurant_address = [];
+var restaurant_url = [];
+var bar_name = [];
+var bar_rating = [];
+var bar_address = [];
+var bar_url = [];
+
 var weather = [];
 var weather_code = [];
 var min_temperature = [];
@@ -116,6 +124,42 @@ router.get('/park/:park_name',function(req,res,next){
 		    }
 		});
 	};
+	function yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,callback){	
+		yelp.search({ term: 'restaurant', 
+			location: key_words,
+			sort:0
+		})
+		.then(function (data) {
+			for(var i = 0;i<5;i++){
+				restaurant_name.push(data["businesses"][i]["name"]);
+				restaurant_rating.push(data["businesses"][i]["rating_img_url_large"]);
+				restaurant_address.push(data["businesses"][i]["location"]["address"]);
+				restaurant_url.push(data["businesses"][i]["image_url"]);
+			}
+			callback();
+		})
+		.catch(function (err) {
+		  console.error(err);
+		});
+	};
+	function yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,callback){	
+		yelp.search({ term: 'bar', 
+			location: key_words,
+			sort:0
+		})
+		.then(function (data) {
+			for(var i = 0;i<5;i++){
+				bar_name.push(data["businesses"][i]["name"]);
+				bar_rating.push(data["businesses"][i]["rating_img_url_large"]);
+				bar_address.push(data["businesses"][i]["location"]["address"]);
+				bar_url.push(data["businesses"][i]["image_url"]);
+			}
+			callback();
+		})
+		.catch(function (err) {
+		  console.error(err);
+		});
+	};
 	flickr.get("photos.search", {"text": key_words,"sort":"interestingness-desc","per_page":5,"page":1,"min_taken_date":"2016-01-01","in_gallery":true}, function(err, result){
 	    if (err) return console.error(err);
 	    // console.log(result.photos);
@@ -129,8 +173,15 @@ router.get('/park/:park_name',function(req,res,next){
 			    bgImg.push(temp_arr[temp_arr.length-1].source);
 				if(index==4){
 		    		weather_collect(weather,min_temperature,max_temperature,weather_code,time,wind,function(){
-					    res.render('park',{key_words:key_words,bgImg:bgImg,time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code});
-					});
+					    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,function(){
+					    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
+								res.render('park',{key_words:key_words,bgImg:bgImg,
+					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
+					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    	});	
+					    });
+				    });
 		    	}
 			});
 			flickr.get("photos.getSizes", {"photo_id":result.photos.photo[index+1].id}, function(err, result1){
@@ -140,8 +191,15 @@ router.get('/park/:park_name',function(req,res,next){
 			    index++;
 				if(index==4){
 		    		weather_collect(weather,min_temperature,max_temperature,weather_code,time,wind,function(){
-					    res.render('park',{key_words:key_words,bgImg:bgImg,time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code});
-					});
+					    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,function(){
+					    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
+								res.render('park',{key_words:key_words,bgImg:bgImg,
+					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
+					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    	});	
+					    });
+				    });
 		    	}
 			});
 			flickr.get("photos.getSizes", {"photo_id":result.photos.photo[index-1].id}, function(err, result1){
@@ -151,18 +209,18 @@ router.get('/park/:park_name',function(req,res,next){
 			    index++;
 				if(index==4){
 		    		weather_collect(weather,min_temperature,max_temperature,weather_code,time,wind,function(){
-					    res.render('park',{key_words:key_words,bgImg:bgImg,time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code});
-					});
+					    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,function(){
+					    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
+								res.render('park',{key_words:key_words,bgImg:bgImg,
+					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
+					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    	});	
+					    });
+				    });
 		    	}
 			});
 	});
-	// yelp.search({ term: 'food', location: key_words })
-	// 	.then(function (data) {
-	// 	  console.log(data);
-	// 	})
-	// 	.catch(function (err) {
-	// 	  console.error(err);
-	// 	});
 });
 
 module.exports = router;

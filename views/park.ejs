@@ -19,6 +19,31 @@
 			    -webkit-transition: background 0.5s linear; /* Safari and Chrome */
 			    -o-transition: background 0.5s linear; /* Opera */
 			}
+			body{
+				background-color: beige;
+			}
+			h2{
+				margin-top: 50px;
+				margin-bottom: 15px;
+				font-size: 60px;
+				text-align: center;
+				font-family: 'Slabo 27px', serif;
+				color: #0D3752
+			}
+			h3{
+				font-size: 30px;
+				text-align: center;
+				font-family: 'Slabo 27px', serif;
+				color: #0D3752;
+				margin-top:0;
+				margin-bottom: 20px
+			}
+			hr{
+				 height:5px;
+				 border-radius:5px;
+				 color:#0D3752;
+				 background-color:#0D3752;
+			}
 			button{
 			    margin-top: 250px;
 			    height: 100px;
@@ -31,19 +56,15 @@
 			button:hover{
 				opacity: 0.4;
 			}
-			h2{
-				margin-top: 50px;
-				margin-bottom: 15px;
-			}
 			tr{
 				height:50px;
 				text-align: center;
 				font-size: 20px;
-				/*font-family: 'Libre Franklin', sans-serif;*/
-				border-radius: 4px;
+				border-spacing: 3px;
+				/*border-radius: 4px;*/
 				opacity: 1;
-				background: url('../img/weather-bg.png') no-repeat center center fixed;
-				box-shadow: 0px 0px 5px #0d3752;
+				background: url('../img/weather-bg-1.jpg') no-repeat center center fixed;
+				box-shadow: 0px 0px 2px #0d3752;
 				/*-webkit-box-shadow: 0px 0px 5px #0D3752;*/
 			   /*-moz-box-shadow: 0px 0px 5px #0D3752;*/
 			}
@@ -54,6 +75,12 @@
 				font-size: 20px;
 				border:none;
 				background:transparent;
+			}
+			#restaurant{
+				display: inline;
+			}
+			#bar{
+				display: none;
 			}
 		</style>
 	</head>
@@ -104,13 +131,21 @@
 					document.getElementById('bg').style.backgroundSize = "cover";
 				}
 			}
+			function r_over(){
+				document.getElementById('restaurant').style.display = "inline";
+				document.getElementById('bar').style.display = "none";
+			}
+			function b_over(){
+				document.getElementById('restaurant').style.display = "none";
+				document.getElementById('bar').style.display = "inline";
+			}
 			</script>
 		<button id="left" style="float: left;" onclick="prevImg()">&#10094;</button>
 		<button id="right" style="float: right;" onclick="nextImg()">&#10095;</button>
 		</div>
 		<div class="container" style="margin-bottom: 100px">
-			<h2 style="font-size: 60px;text-align: center;font-family: 'Slabo 27px', serif;color: #0D3752">Weather</h2>
-			<hr style="height:5px;border-radius:5px;color:#0D3752;background-color:#0D3752;" />
+			<h2>Weather</h2>
+			<hr/>
 			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
 			<% for(var i = 0;i<5;i++){%>
 				<tr>
@@ -122,8 +157,32 @@
 				</tr>
 			<% } %>
 			</table>
-			<h2 style="font-size: 60px;text-align: center;font-family: 'Slabo 27px', serif;color: #0D3752">Attraction</h2>
-			<hr style="height:5px;border-radius:5px;color:#0D3752;background-color:#0D3752;" />
+			<h2>Attraction</h2>
+			<hr/>
+			<h3 style="float: left;left:300px;position: relative;" onmouseover="r_over()">Restaurant</h3>
+			<h3 style="float: right;right:300px;position: relative;"" onmouseover="b_over()">Bar</h3>
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center" id="restaurant">
+			<% for(var i = 0;i<5;i++){%>
+				<tr style="height:120px">
+					<td style="width:10%"><%= i+1%></td>
+					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="height:100px;border-radius: 5px"></td>
+					<td style="width:30%"><%= restaurant_name[i]%></td>
+					<td style="width:10%"><img src="<%= restaurant_rating[i]%>""></td>
+					<td><%= restaurant_address[i]%></td>
+				</tr>
+			<% } %>
+			</table>
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center" id="bar">
+			<% for(var i = 0;i<5;i++){%>
+				<tr style="height:120px">
+					<td style="width:10%"><%= i+1%></td>
+					<td style="width:15%"><img src="<%= bar_url[i]%>" style="height:100px;border-radius: 5px"></td>
+					<td style="width:30%"><%= bar_name[i]%></td>
+					<td style="width:10%"><img src="<%= bar_rating[i]%>""></td>
+					<td><%= bar_address[i]%></td>
+				</tr>
+			<% } %>
+			</table>
 		</div>
 	</body>
 </html>
