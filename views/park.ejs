@@ -4,7 +4,7 @@
 		<!-- font -->
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Libre+Franklin:600" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 
@@ -14,13 +14,13 @@
 			#bg{
 				height:600px;
 				width:100%;
-				transition: background 0.5s linear;
-			    -moz-transition: background 0.5s linear; /* Firefox 4 */
-			    -webkit-transition: background 0.5s linear; /* Safari and Chrome */
-			    -o-transition: background 0.5s linear; /* Opera */
+				transition: background 1s linear;
+			    -moz-transition: background 1s linear; /* Firefox 4 */
+			    -webkit-transition: background 1s linear; /* Safari and Chrome */
+			    -o-transition: background 1s linear; /* Opera */
 			}
 			body{
-				background-color: beige;
+				background-color: #e6e9ef;
 			}
 			h2{
 				margin-top: 50px;
@@ -56,20 +56,29 @@
 			button:hover{
 				opacity: 0.4;
 			}
+			table{
+				background: #34495E;
+				color: #fff;
+				border-radius: .4em;
+				overflow: hidden;
+				font-family: Montserrat, sans-serif;
+				text-align: center;
+			}
+			th{
+				text-align: center;
+				color: #dd5;
+			}
 			tr{
 				height:50px;
-				text-align: center;
 				font-size: 20px;
 				border-spacing: 3px;
-				/*border-radius: 4px;*/
 				opacity: 1;
-				background: url('../img/weather-bg-1.jpg') no-repeat center center fixed;
-				box-shadow: 0px 0px 2px #0d3752;
-				/*-webkit-box-shadow: 0px 0px 5px #0D3752;*/
-			   /*-moz-box-shadow: 0px 0px 5px #0D3752;*/
 			}
 			tr:hover{
 				opacity: 0.9;
+			}
+			td{
+			    border-color: lighten(#34495E, 10%);
 			}
 			.list-group-item{
 				font-size: 20px;
@@ -77,7 +86,7 @@
 				background:transparent;
 			}
 			#restaurant{
-				display: inline;
+				display: block;
 			}
 			#bar{
 				display: none;
@@ -97,6 +106,7 @@
 		text-shadow: 3px 3px #000000;"><%= key_words%></h1>
 		<script type="text/javascript">
 			var index = 0;
+			prevImg();
 			function prevImg(){
 				if(index==0){
 					index=2;
@@ -113,6 +123,7 @@
 					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[1])%>+"') no-repeat center center";
 					document.getElementById('bg').style.backgroundSize = "cover";	
 				}
+				setTimeout(prevImg, 6000);
 			}
 			function nextImg(){
 				if(index==0){
@@ -132,12 +143,12 @@
 				}
 			}
 			function r_over(){
-				document.getElementById('restaurant').style.display = "inline";
+				document.getElementById('restaurant').style.display = "block";
 				document.getElementById('bar').style.display = "none";
 			}
 			function b_over(){
 				document.getElementById('restaurant').style.display = "none";
-				document.getElementById('bar').style.display = "inline";
+				document.getElementById('bar').style.display = "block";
 			}
 			</script>
 		<button id="left" style="float: left;" onclick="prevImg()">&#10094;</button>
@@ -147,15 +158,25 @@
 			<h2>Weather</h2>
 			<hr/>
 			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
-			<% for(var i = 0;i<5;i++){%>
+				<colgroup span="2"></colgroup>
+				<col>
+				<col>
+				<col>
 				<tr>
-					<td><%= time[i]%></td>
-					<td><img src="<%= weather_code[i]%>" style="width:50px"></td>
-					<td><%= weather[i]%></td>
-					<td><%= min_temperature[i]%>~<%= max_temperature[i]%></td>
-					<td><%= wind[i]%></td>
+					<th colspan="2" scope="rowgroup"">Date</th>
+					<th scope="col">Description</th>
+					<th scope="col">Temperature</th>
+					<th scope="col">Wind</th>
 				</tr>
-			<% } %>
+				<% for(var i = 0;i<5;i++){%>
+					<tr>
+						<td><%= time[i]%></td>
+						<td><img src="<%= weather_code[i]%>" style="width:50px"></td>
+						<td><%= weather[i]%></td>
+						<td><%= min_temperature[i]%>~<%= max_temperature[i]%></td>
+						<td><%= wind[i]%></td>
+					</tr>
+				<% } %>
 			</table>
 			<h2>Attraction</h2>
 			<hr/>
@@ -165,7 +186,7 @@
 			<% for(var i = 0;i<5;i++){%>
 				<tr style="height:120px">
 					<td style="width:10%"><%= i+1%></td>
-					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="height:100px;border-radius: 5px"></td>
+					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="border-radius: 5px"></td>
 					<td style="width:30%"><%= restaurant_name[i]%></td>
 					<td style="width:10%"><img src="<%= restaurant_rating[i]%>""></td>
 					<td><%= restaurant_address[i]%></td>

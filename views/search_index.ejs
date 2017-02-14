@@ -126,7 +126,7 @@
 				    });
 				    var result_table = document.getElementById('result_table');
 				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px"></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
-				    contentString = '<a href='+ website[i]+'>'+encodeURIComponent(park_names[i])+'</a>';
+				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
 					google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
 						return function() {
 							infowindow.setContent(contentString);

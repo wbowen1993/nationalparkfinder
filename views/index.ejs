@@ -12,15 +12,15 @@
 		#index_bng{
 			width: 100%;
 			height: 90%;
-			background: url('../img/Bryce_as_index.jpg');
-			background-size: 100% 100%;
+			background: url('../img/zion_as_index.jpg') center center fixed;
+			background-size: cover;
 			display: block;
 			text-align: center;
 		}
 		#search{
 			width:50%;
 			height:180px;
-			top:500px;
+			top:460px;
 			left:25%;
 			background-color: rgba(128,128,128,0.5);
 			position: relative;
@@ -28,6 +28,13 @@
 		}
 		h1{
 			margin-top: 0;
+			font-family: 'Slabo 27px', serif;
+			color:white;
+			top:400px;
+			font-size: 80px;
+			position: absolute;
+			width:100%;
+			text-shadow: 3px 3px #000000
 		}
 		.form-control{
 			width:150px;
@@ -37,7 +44,7 @@
 	<body>
 		<% include ../views/layout %>
 		<div id = 'index_bng'>
-			<h1 style="font-family: 'Slabo 27px', serif;color:white;top:400px;font-size: 70px;position: absolute;width:100%">Welcome to National Park Finder!</h1>
+			<h1>Welcome to National Park Finder!</h1>
 			<div id = 'search'>
 				<div class='container' style="position: relative;width:initial;">
 					<h2 style="font-family: 'Slabo 27px', serif;color:white">Find park by</h2>
