@@ -5,8 +5,7 @@ This README would normally document whatever steps are necessary to get your app
 ### ToDo ###
 
 * Add MySql through Amazon Web Services.
-* Implement UI to select several parks an specify several commands.
-* 
+* Implement UI to select several parks an specify several commands. 
 
 ### What is this repository for? ###
 
@@ -16,6 +15,7 @@ This README would normally document whatever steps are necessary to get your app
 
 ### How do I get set up? ###
 
+* Install Node js
 * Summary of set up
 * Configuration
 * Dependencies
