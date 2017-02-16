@@ -52,7 +52,7 @@
 						<select name="state" class="form-control" style="left:150px;position: relative;float:left">
 							<option selected="selected" value="">--By State</option>
 							<% for(var i = 0;i<states.length;i++){%>
-								<option value=<%= states[i].name%>><%= states[i].name%></option>
+								<option value=<%= encodeURI(states[i].name)%>><%= states[i].name%></option>
 							<% } %>
 						</select>
 						<select name="activity" class="form-control" style="right:150px;position: relative;float: right;">

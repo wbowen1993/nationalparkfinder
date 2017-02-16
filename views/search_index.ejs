@@ -10,7 +10,7 @@
 		<style>
 		#map{
 			width: 100%;
-			height:600px;
+			height:700px;
 		}
 		body{
 			background-color: #e6e9ef;
@@ -68,14 +68,15 @@
 			function getURLParameter(name) {
 					return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 				};
-			var state_q = getURLParameter('state');
+			var state_q = decodeURI(getURLParameter('state'));
 			var res_title = document.getElementById('res_title');
-			if(state_q!=null)
+			if(state_q!="null")
 				res_title.innerHTML = "Search result for National Park in "+ state_q;
 			else
 				res_title.innerHTML = "Search result for National Park in America";
 			var activity_q = getURLParameter('activity');
 			function initMap() {
+				var bounds = new google.maps.LatLngBounds();  
 			    var myLatLng = {lat: 37.09024, lng: -95.712891};
 			    var customMapType = new google.maps.StyledMapType([
 				{
@@ -116,7 +117,7 @@
 				image_url = <%- JSON.stringify(image_url)%>;
 				var count = 0;
 			  	for(var i = 0;i<latitude.length;i++){
-			  		if(state_q!=null&&state_q!=state[i])
+			  		if(state_q!="null"&&state_q!=state[i])
 			  			continue;
 			  		count+=1;
 				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
@@ -124,6 +125,7 @@
 				        map:map,
 				        position:pos
 				    });
+				    bounds.extend(pos);
 				    var result_table = document.getElementById('result_table');
 				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px"></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
 				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
@@ -136,6 +138,9 @@
 				}
 				map.mapTypes.set(customMapTypeId, customMapType);
 				map.setMapTypeId(customMapTypeId);
+				google.maps.event.addListenerOnce(map, 'idle', function() {
+			        map.fitBounds(bounds);
+				});
 		    } 
 	    </script>
 			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"

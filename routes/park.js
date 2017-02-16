@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var https = require('https');
+var MongoClient = require('mongodb').MongoClient;
 var Flickr = require("node-flickr");
 var keys = {"api_key": "338ad28fc7b797a4836746d87db99105"}
 flickr = new Flickr(keys);
@@ -28,13 +29,68 @@ var max_temperature = [];
 var time = [];
 var wind = [];
 
+var park_name = [];
+var park_name1 = [];
+var latitude = [];
+var longitude = [];
+var desc = [];
+var lat;
+var lon;
+var description;
+
+function link_db(park_name,latitude,longitude,park_name1,desc,callback){
+	MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
+	  	if(!err) {
+		    console.log("We are connected database: national_park!");
+		    var collection = db.collection('park_info_from_WIKI');
+		    var collection1 = db.collection('park_info_from_RIDB');
+		    collection.find().toArray(function(err, items) {
+		        if(!err){
+		        	for(var i = 0;i<items.length;i++){
+			             park_name.push(items[i]["name"]);
+			             latitude.push(items[i]["latitude"]);
+			             longitude.push(items[i]["longitude"]);
+		        	}
+			    }            
+		    });
+		    collection1.find().toArray(function(err, items) {
+		        if(!err){
+		        	for(var i = 0;i<items[0]["table"].length;i++){
+			             park_name1.push(items[0]["table"][i]["name"]);
+			             desc.push(items[0]["table"][i]["description"]);
+					}
+
+		        	callback();
+		        }            
+		    });
+	  	}
+	});
+}
+
 router.get('/park/:park_name',function(req,res,next){
 	var key_words = req.params.park_name;
 	decodeURI(key_words);
-	key_words+=" national park";
-    var bgImg=[];
-    var weather_url="http://api.openweathermap.org/data/2.5/forecast?APPID=e2724c27cfc2e499b0408cd890bdbef4&q="+key_words;
+	var bgImg=[];
+	var weather_url;
+    link_db(park_name,latitude,longitude,park_name1,desc,function(){
+    	for(var i = 0;i<park_name.length;i++){
+    		if(park_name[i]==key_words){
+    			lat = latitude[i];
+    			lon = longitude[i];
+    			break;
+    		}
+    	}
+    	for(var i = 0;i<park_name1.length;i++){
+    		if(park_name1[i]==key_words){
+    			description = desc[i];
+    			break;
+    		}
+    	}
+    	weather_url="http://api.openweathermap.org/data/2.5/forecast?APPID=e2724c27cfc2e499b0408cd890bdbef4&lat="+lat+"&lon="+lon;
+    	//console.log(weather_url);
+    });
 	function weather_collect(weather,min_temperature,max_temperature,weather_code,time,wind,callback){
+		console.log(weather);
 		request({
 		    url: weather_url,
 		    json: true
@@ -126,10 +182,12 @@ router.get('/park/:park_name',function(req,res,next){
 	};
 	function yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,callback){	
 		yelp.search({ term: 'restaurant', 
-			location: key_words,
-			sort:0
+			ll: lat+","+lon,
+			sort:0,
+			limit:6
 		})
 		.then(function (data) {
+		    console.log(data["businesses"]);
 			for(var i = 0;i<5;i++){
 				restaurant_name.push(data["businesses"][i]["name"]);
 				restaurant_rating.push(data["businesses"][i]["rating_img_url_large"]);
@@ -144,10 +202,12 @@ router.get('/park/:park_name',function(req,res,next){
 	};
 	function yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,callback){	
 		yelp.search({ term: 'bar', 
-			location: key_words,
+			ll: lat+","+lon,
 			sort:0
 		})
 		.then(function (data) {
+			console.log(lat);
+		    console.log(lon);
 			for(var i = 0;i<5;i++){
 				bar_name.push(data["businesses"][i]["name"]);
 				bar_rating.push(data["businesses"][i]["rating_img_url_large"]);
@@ -178,7 +238,8 @@ router.get('/park/:park_name',function(req,res,next){
 								res.render('park',{key_words:key_words,bgImg:bgImg,
 					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
-					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
+						    	lat:lat,lon:lon,description:description});
 					    	});	
 					    });
 				    });
@@ -196,7 +257,8 @@ router.get('/park/:park_name',function(req,res,next){
 								res.render('park',{key_words:key_words,bgImg:bgImg,
 					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
-					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
+						    	lat:lat,lon:lon,description:description});
 					    	});	
 					    });
 				    });
@@ -214,7 +276,8 @@ router.get('/park/:park_name',function(req,res,next){
 								res.render('park',{key_words:key_words,bgImg:bgImg,
 					    		time:time,weather:weather,wind:wind,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
-					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url});
+					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
+					    		lat:lat,lon:lon,description:description});
 					    	});	
 					    });
 				    });

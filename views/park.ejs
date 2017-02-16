@@ -91,6 +91,10 @@
 			#bar{
 				display: none;
 			}
+			#map{
+				width: 100%;
+				height:500px;
+			}
 		</style>
 	</head>
 	<body>
@@ -155,6 +159,9 @@
 		<button id="right" style="float: right;" onclick="nextImg()">&#10095;</button>
 		</div>
 		<div class="container" style="margin-bottom: 100px">
+			<h2>Basic Information</h2>
+			<hr/>
+			<p style="font-size: 24px;font-family:'Slabo 27px', serif;color: #0D3752"><%= description%></p>
 			<h2>Weather</h2>
 			<hr/>
 			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
@@ -204,6 +211,77 @@
 				</tr>
 			<% } %>
 			</table>
+			<h2>Map</h2>
+			<hr/>
+			<div id="map">
+			<script>
+				function initMap() {
+					var bounds = new google.maps.LatLngBounds();  
+				    var myLatLng = {lat: 37.09024, lng: -95.712891};
+				    var customMapType = new google.maps.StyledMapType([
+					{
+						stylers: [
+						  {hue: '#4A9797'},
+						  {gamma: 0.5},
+						  {weight: 0.5}
+						]
+					},
+				      {
+				        featureType: 'water',
+				        stylers: [{color: '#0D3752'}]
+				      }
+				    ], {
+				      name: 'Custom Style'
+					});
+					var customMapTypeId = 'custom_style';
+					var map = new google.maps.Map(document.getElementById('map'), {
+						center: myLatLng,
+						scrollwheel: true,
+						zoom: 4,
+						mapTypeControlOptions: {
+						  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
+						}
+					});
+				  	var infowindow = new google.maps.InfoWindow();
+				  	var latitude;
+					latitude = <%- JSON.stringify(lat)%>;
+					var longitude;
+					longitude = <%- JSON.stringify(lon)%>;
+				  	var pos = {lat:parseFloat(latitude),lng:parseFloat(longitude)};
+				  	marker = new google.maps.Marker({
+				        map:map,
+				        position:pos,
+				        icon:"http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+				    });
+				    bounds.extend(pos);
+				    if (navigator.geolocation) {
+					    navigator.geolocation.getCurrentPosition(function(position) {
+					      var user = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+					      map.setCenter(pos);
+					      marker_current = new google.maps.Marker({
+					        map:map,
+					        position:user,
+					        icon:"http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+					      });
+					      bounds.extend(user);
+					  	},function() {
+					      window.alert("Unable to get your current Location!");
+					    });
+					  }
+				 	else {
+					    // Browser doesn't support Geolocation
+					    window.alert("Unable to get your current Location! Please turn the function on or try other function.");
+					}
+					map.mapTypes.set(customMapTypeId, customMapType);
+					map.setMapTypeId(customMapTypeId);
+					google.maps.event.addListenerOnce(map, 'idle', function() {
+				        map.fitBounds(bounds);
+					});
+				}
+				</script>
+				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
+		  async defer></script>
+			</div>
 		</div>
 	</body>
 </html>

@@ -8,17 +8,22 @@ var activities;
 // Connect to the db
 MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info", function(err, db) {
   if(!err) {
-    console.log("We are connected");
-    var collection1 = db.collection('state');
-    var collection2 = db.collection('activity');
-    collection1.find().toArray(function(err, items) {
-        if(!err)
-	        states = items;    
-        // console.log(items);            
-    });
-    collection2.find().toArray(function(err, items) {
+    console.log("We are connected to database:states_info!");
+    var collection = db.collection('activity');
+    collection.find().toArray(function(err, items) {
         if(!err) 
 	        activities = items;            
+    });
+  }
+});
+
+MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
+  if(!err) {
+    console.log("We are connected database: national_park!");
+    var collection = db.collection('states_info');
+    collection.find().toArray(function(err, items) {
+        if(!err)
+            states = items;           
     });
   }
 });
