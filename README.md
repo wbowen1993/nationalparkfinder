@@ -21,6 +21,7 @@ This README would normally document whatever steps are necessary to get your app
 * Dependencies
 * Database configuration
 * How to run tests
+	Change current folder to the root path of the project and run "node server" in terminal.
 * Deployment instructions
 
 ### Contribution guidelines ###
