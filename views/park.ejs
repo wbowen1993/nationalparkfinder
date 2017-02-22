@@ -11,6 +11,9 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<script src="../js/jquery-3.1.1.min.js"></script>
 		<style>
+			.container{
+				width: 75%
+			}
 			#bg{
 				height:600px;
 				width:100%;
@@ -169,11 +172,15 @@
 				<col>
 				<col>
 				<col>
+				<col>
+				<col>
 				<tr>
 					<th colspan="2" scope="rowgroup"">Date</th>
 					<th scope="col">Description</th>
 					<th scope="col">Temperature</th>
-					<th scope="col">Wind</th>
+					<th scope="col">Humidity</th>
+					<th scope="col">Sunrise</th>
+					<th scope="col">Sunset</th>
 				</tr>
 				<% for(var i = 0;i<5;i++){%>
 					<tr>
@@ -181,7 +188,9 @@
 						<td><img src="<%= weather_code[i]%>" style="width:50px"></td>
 						<td><%= weather[i]%></td>
 						<td><%= min_temperature[i]%>~<%= max_temperature[i]%></td>
-						<td><%= wind[i]%></td>
+						<td><%= humidity[i]%></td>
+						<td><%= sunrise[i]%></td>
+						<td><%= sunset[i]%></td>
 					</tr>
 				<% } %>
 			</table>

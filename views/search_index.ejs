@@ -43,7 +43,34 @@
 		.btn{
 			width: 120px;
 			height:60px;
-		} 
+		}
+		input[type=checkbox] {
+			display:none;
+		}
+		input[type=checkbox] + label
+		{
+			position: absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			margin-left:100px;
+			height: 133px;
+			width: 133px;
+			display:inline-block;
+			padding: 0 0 0 0px;
+			border-radius:50%;
+			opacity:0;
+		}
+		input[type=checkbox]:checked + label
+		{
+			opacity: 1;
+			margin-left:100px;
+			height: 133px;
+			width: 133px;
+			display:inline-block;
+			padding: 0 0 0 0px;
+			border-radius:50%
+		}
 		a{
 			text-decoration: none!important;
 		}
@@ -65,6 +92,9 @@
 			</table>
 		</div>
 		<script>
+			function changeOpacity(){
+				document.getElementById('img').style.opacity='0.7';
+			}
 			function getURLParameter(name) {
 					return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 				};
@@ -126,9 +156,12 @@
 				        position:pos
 				    });
 				    bounds.extend(pos);
+				    // <img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img">
 				    var result_table = document.getElementById('result_table');
-				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px"></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
 				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
+				    var num = 'label'+i.toString();
+				    document.getElementById(num).style.background="url('../img/check.png') no-repeat center center";
 					google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
 						return function() {
 							infowindow.setContent(contentString);
