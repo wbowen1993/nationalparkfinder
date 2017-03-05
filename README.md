@@ -15,7 +15,20 @@ This README would normally document whatever steps are necessary to get your app
 
 ### How do I get set up? ###
 
-* Install Node js
+** Setup Node.js Environment**
+
+*Do the following to set up the environment and the project.*
+
+1. Go to https://nodejs.org/en/download/ and download Node.js for your system. Once it is
+installed, node and npm will be two recognizable commands in the terminal.
+2. git clone https://dgrosman@bitbucket.org/dgrosman/cis550_project.git
+3. Type the npm install command to download all the required node modules in the node modules
+directory. You now have the project.
+4. Type the node server command to start the server; by default, it will run on port 3000. You should
+now be able to run the website. To ensure everything is working as expected, go to your browser
+and in the search bar type http://localhost:3000/. You should be able to see the website.
+
+
 * Summary of set up
 * Configuration
 * Dependencies
