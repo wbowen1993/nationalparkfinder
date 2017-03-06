@@ -8,7 +8,7 @@ var park = require('./routes/park');
 
 var app = express();
 
-var port = 3000;
+var port = 80;
 
 //View Engine
 app.set('views', __dirname + '/views');

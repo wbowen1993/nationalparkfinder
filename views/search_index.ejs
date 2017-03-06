@@ -100,11 +100,17 @@
 				};
 			var state_q = decodeURI(getURLParameter('state'));
 			var res_title = document.getElementById('res_title');
+			var activity_q = decodeURI(getURLParameter('activity'));
 			if(state_q!="null")
-				res_title.innerHTML = "Search result for National Park in "+ state_q;
+				if(activity_q!="null")
+					res_title.innerHTML = "Search result for National Park in "+ state_q + " and activity: " + activity_q;
+				else
+					res_title.innerHTML = "Search result for National Park in "+ state_q;
 			else
-				res_title.innerHTML = "Search result for National Park in America";
-			var activity_q = getURLParameter('activity');
+				if(activity_q!="null")
+					res_title.innerHTML = "Search result for National Park in America with activity: " + activity_q;
+				else
+					res_title.innerHTML = "Search result for National Park in America";
 			function initMap() {
 				var bounds = new google.maps.LatLngBounds();  
 			    var myLatLng = {lat: 37.09024, lng: -95.712891};
@@ -133,6 +139,10 @@
 					}
 				});
 			  	var infowindow = new google.maps.InfoWindow();
+			  	var trans_state = <%- JSON.stringify(state_q)%>;
+			  	console.log(trans_state);
+			  	var trans_activity = <%- JSON.stringify(activity_q)%>;
+			  	console.log(trans_activity);
 			  	var park_names = [];
 			  	park_names = <%- JSON.stringify(park_name)%>;
 				var latitude = [];
@@ -147,8 +157,27 @@
 				image_url = <%- JSON.stringify(image_url)%>;
 				var count = 0;
 			  	for(var i = 0;i<latitude.length;i++){
-			  		if(state_q!="null"&&state_q!=state[i])
-			  			continue;
+			  		// if(state_q!="null"&&state_q!=state[i])
+			  		// 	continue;
+			  		// var MongoClient = require('mongodb').MongoClient;
+			  // 		MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
+					// 	if(!err) {
+					// 	    console.log("We are connected database: national_park!");
+					// 	    var collection = db.collection('park_info_from_RIDB');
+					// 	    var park_code;
+					// 	    collection.find().toArray(function(err, items) {
+					// 	        if(!err){
+					// 	        	for(var j = 0;j<items[0]["table"].length;j++){
+					// 	        		if(items[0]["table"][j]["name"]==park_names[i]){
+					// 	        			park_code = items[0]["table"][j]["id"];
+					// 	        			break;
+					// 		        	}
+					//         		}
+					// 	        }
+					// 	    }
+					// 	    console.log(park_code);
+					// 	}
+					// }
 			  		count+=1;
 				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
 				  	marker = new google.maps.Marker({
@@ -156,7 +185,6 @@
 				        position:pos
 				    });
 				    bounds.extend(pos);
-				    // <img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img">
 				    var result_table = document.getElementById('result_table');
 				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
 				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
@@ -176,7 +204,7 @@
 				});
 		    } 
 	    </script>
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7fykw9VXKzdINOG_he5NmWMu6ArIgXuE&callback=initMap&libraries=geometry"
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDikfTOXeaw7tQ65UFLmB-_eqV_AfqCAO4&callback=initMap&language=en"
 	  async defer></script>
   </body>
   </html>

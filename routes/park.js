@@ -128,9 +128,11 @@ router.get('/park/:park_name',function(req,res,next){
 		})
 		.then(function (data) {
 		    for(var i = 0;i<5;i++){
+				if(data["businesses"][i]==undefined)
+					break;
 				restaurant_name.push(data["businesses"][i]["name"]);
 				restaurant_rating.push(data["businesses"][i]["rating_img_url_large"]);
-				restaurant_address.push(data["businesses"][i]["location"]["address"]);
+				restaurant_address.push(data["businesses"][i]["location"]["display_address"]);
 				restaurant_url.push(data["businesses"][i]["image_url"]);
 			}
 			callback();
@@ -148,9 +150,11 @@ router.get('/park/:park_name',function(req,res,next){
 			console.log(lat);
 		    console.log(lon);
 			for(var i = 0;i<5;i++){
+				if(data["businesses"][i]==undefined)
+					break;
 				bar_name.push(data["businesses"][i]["name"]);
 				bar_rating.push(data["businesses"][i]["rating_img_url_large"]);
-				bar_address.push(data["businesses"][i]["location"]["address"]);
+				bar_address.push(data["businesses"][i]["location"]["display_address"]);
 				bar_url.push(data["businesses"][i]["image_url"]);
 			}
 			callback();
