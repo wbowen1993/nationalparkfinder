@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<title>Search Result</title>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 		<!-- Latest compiled and minified CSS -->
@@ -8,6 +9,9 @@
 <!-- Latest compiled and minified JavaScript -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<style>
+		.container{
+			width:80%;
+		}
 		#map{
 			width: 100%;
 			height:700px;
@@ -37,7 +41,7 @@
 			vertical-align: middle;
 		}
 		.name{
-			width:1000px;
+			width:500px;
 			vertical-align: middle;
 		}
 		.btn{
@@ -53,10 +57,11 @@
 			top:0;
 			bottom:0;
 			left:0;
-			margin-left:100px;
+			margin-left:130px;
+			text-align: center;
 			height: 133px;
 			width: 133px;
-			display:inline-block;
+			display:block;
 			padding: 0 0 0 0px;
 			border-radius:50%;
 			opacity:0;
@@ -64,10 +69,12 @@
 		input[type=checkbox]:checked + label
 		{
 			opacity: 1;
-			margin-left:100px;
+			display: block;
+			margin-left:130px;
+			text-align: center;
 			height: 133px;
 			width: 133px;
-			display:inline-block;
+			display:block;
 			padding: 0 0 0 0px;
 			border-radius:50%
 		}
@@ -139,10 +146,6 @@
 					}
 				});
 			  	var infowindow = new google.maps.InfoWindow();
-			  	var trans_state = <%- JSON.stringify(state_q)%>;
-			  	console.log(trans_state);
-			  	var trans_activity = <%- JSON.stringify(activity_q)%>;
-			  	console.log(trans_activity);
 			  	var park_names = [];
 			  	park_names = <%- JSON.stringify(park_name)%>;
 				var latitude = [];
@@ -155,29 +158,10 @@
 				state = <%- JSON.stringify(state)%>;
 				var image_url = [];
 				image_url = <%- JSON.stringify(image_url)%>;
-				var count = 0;
+				var park_activities_code = [];
+				park_activities_code = <%- JSON.stringify(park_activities_code_array)%>;
+				var count = 0;    
 			  	for(var i = 0;i<latitude.length;i++){
-			  		// if(state_q!="null"&&state_q!=state[i])
-			  		// 	continue;
-			  		// var MongoClient = require('mongodb').MongoClient;
-			  // 		MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
-					// 	if(!err) {
-					// 	    console.log("We are connected database: national_park!");
-					// 	    var collection = db.collection('park_info_from_RIDB');
-					// 	    var park_code;
-					// 	    collection.find().toArray(function(err, items) {
-					// 	        if(!err){
-					// 	        	for(var j = 0;j<items[0]["table"].length;j++){
-					// 	        		if(items[0]["table"][j]["name"]==park_names[i]){
-					// 	        			park_code = items[0]["table"][j]["id"];
-					// 	        			break;
-					// 		        	}
-					//         		}
-					// 	        }
-					// 	    }
-					// 	    console.log(park_code);
-					// 	}
-					// }
 			  		count+=1;
 				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
 				  	marker = new google.maps.Marker({
@@ -186,7 +170,16 @@
 				    });
 				    bounds.extend(pos);
 				    var result_table = document.getElementById('result_table');
-				    result_table.innerHTML += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+				    var table_text = '';
+				    table_text += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td>';
+				    for(var j = 0;j<park_activities_code[i].length;j++){
+				    	if(park_activities_code[i][j]<100)
+						    table_text += '<img src="https://www.recreation.gov/images/activities/icon_actv_'+park_activities_code[i][j].toString()+'.png"></img>';
+						else
+							table_text += '<img src="https://www.recreation.gov/images/activities/icon_blank.png"></img>';
+					}
+					table_text += '</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+					result_table.innerHTML += table_text;
 				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
 				    var num = 'label'+i.toString();
 				    document.getElementById(num).style.background="url('../img/check.png') no-repeat center center";
