@@ -173,7 +173,7 @@
 				    var table_text = '';
 				    table_text += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td>';
 				    for(var j = 0;j<park_activities_code[i].length;j++){
-				    	if(park_activities_code[i][j]<100)
+				    	if(park_activities_code[i][j]<100||park_activities_code[i][j]!=24)
 						    table_text += '<img src="https://www.recreation.gov/images/activities/icon_actv_'+park_activities_code[i][j].toString()+'.png"></img>';
 						else
 							table_text += '<img src="https://www.recreation.gov/images/activities/icon_blank.png"></img>';
