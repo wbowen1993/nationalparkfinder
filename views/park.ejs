@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<title><%= key_words%></title>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<!-- font -->
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
@@ -39,7 +40,7 @@
 				font-family: 'Slabo 27px', serif;
 				color: #0D3752;
 				margin-top:0;
-				margin-bottom: 20px
+				margin-bottom: 20px;
 			}
 			hr{
 				 height:5px;
@@ -94,9 +95,24 @@
 			#bar{
 				display: none;
 			}
+			#desc{
+				display: inline-block;
+			}
+			#wea_info{
+				display: none;
+			}
+			#dire_info{
+				display: none;
+				clear: left;
+			}
 			#map{
 				width: 100%;
 				height:500px;
+			}
+			p{
+				font-size: 24px;
+				font-family:'Slabo 27px', serif;
+				color: #0D3752;
 			}
 		</style>
 	</head>
@@ -157,6 +173,21 @@
 				document.getElementById('restaurant').style.display = "none";
 				document.getElementById('bar').style.display = "block";
 			}
+			function _1_over(){
+				document.getElementById('desc').style.display = "inline-block";
+				document.getElementById('wea_info').style.display = "none";
+				document.getElementById('dire_info').style.display = "none";
+			}
+			function _2_over(){
+				document.getElementById('desc').style.display = "none";
+				document.getElementById('wea_info').style.display = "inline-block";
+				document.getElementById('dire_info').style.display = "none";
+			}
+			function _3_over(){
+				document.getElementById('desc').style.display = "none";
+				document.getElementById('wea_info').style.display = "none";
+				document.getElementById('dire_info').style.display = "inline-block";
+			}
 			</script>
 		<button id="left" style="float: left;" onclick="prevImg()">&#10094;</button>
 		<button id="right" style="float: right;" onclick="nextImg()">&#10095;</button>
@@ -164,7 +195,14 @@
 		<div class="container" style="margin-bottom: 100px">
 			<h2>Basic Information</h2>
 			<hr/>
-			<p style="font-size: 24px;font-family:'Slabo 27px', serif;color: #0D3752"><%= description%></p>
+			<div style="padding-top: 10px;padding-bottom: 15px">
+				<h3 style="display:inline;left:20%;position: relative;" onmouseover="_1_over()">Description</h3>
+				<h3 style="display:inline;left:35%;position: relative;"" onmouseover="_2_over()">Weather Info</h3>
+				<h3 style="display:inline;left:50%;position: relative;" onmouseover="_3_over()">Direction Info</h3>
+			</div>
+			<p id="desc"><%= description%></p>
+			<p id="wea_info"><%= weather_info%></p>
+			<p id="dire_info"><%= directions_info%></p>
 			<h2>Weather</h2>
 			<hr/>
 			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">

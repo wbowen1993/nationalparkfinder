@@ -20,33 +20,34 @@ var all_park_activities_code = [];
 MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
     if(!err) {
         console.log("We are connected database: national_park!");
-        var collection1 = db.collection('park_info_from_WIKI');
-        var collection2 = db.collection('park_info_from_RIDB');
+        var collection1 = db.collection('all_parks_info');
+        // var collection2 = db.collection('park_info_from_RIDB');
         var collection3 = db.collection('park_activity');
         var collection4 = db.collection('activity_list');
         collection1.find().toArray(function(err, items) {
             if(!err)
             	for(var i = 0;i<items.length;i++){
-    	             all_park_name.push(items[i]["name"]);
-    	             all_website.push(items[i]["website"]);
-    	             all_latitude.push(items[i]["latitude"]);
-    	             all_longitude.push(items[i]["longitude"]);
-    	             all_image_url.push(items[i]["image"]); 
-    	             all_state.push(items[i]["state"]);
-                     all_park_activities_code.push([]);   
+                    all_park_code.push(items[i]["id"]);
+                    all_park_name.push(items[i]["name"]);
+                    all_website.push(items[i]["website"]);
+                    all_latitude.push(items[i]["latitude"]);
+                    all_longitude.push(items[i]["longitude"]);
+                    all_image_url.push(items[i]["img_url"]); 
+                    all_state.push(items[i]["state"]);
+                    all_park_activities_code.push([]);   
             	}            
         });
-        collection2.find().toArray(function(err, items) {
-            if(!err)
-                for(var i = 0;i<all_state.length;i++){
-                    for(var j = 0;j<items[0]["table"].length;j++){
-                        if(all_park_name[i]==items[0]["table"][j]["name"]){
-                            all_park_code.push(items[0]["table"][j]["id"]);
-                            break;
-                        }
-                    }
-                }
-        });
+        // collection2.find().toArray(function(err, items) {
+        //     if(!err)
+        //         for(var i = 0;i<all_state.length;i++){
+        //             for(var j = 0;j<items[0]["table"].length;j++){
+        //                 if(all_park_name[i]==items[0]["table"][j]["name"]){
+        //                     all_park_code.push(items[0]["table"][j]["id"]);
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        // });
         collection3.find().toArray(function(err, items) {
             if(!err){
                 for(var i = 0;i<all_park_code.length;i++){

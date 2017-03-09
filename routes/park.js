@@ -15,35 +15,42 @@ var yelp = new Yelp({
 });
 
 
-var park_name = [];
-var park_name1 = [];
+var park_names = [];
+var weather_infos = [];
+var directions_infos = [];
 var latitude = [];
 var longitude = [];
 var desc = [];
 var lat;
 var lon;
 var description;
+var weather_info;
+var directions_info;
 
-function link_db(park_name,latitude,longitude,park_name1,desc,callback){
+function link_db(park_names,latitude,longitude,desc,weather_infos,directions_infos,callback){
 	MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
 	  	if(!err) {
 		    console.log("We are connected database: national_park!");
-		    var collection = db.collection('park_info_from_WIKI');
-		    var collection1 = db.collection('park_info_from_RIDB');
+		    var collection = db.collection('all_parks_info');
+		    // var collection1 = db.collection('park_info_from_RIDB');
+		    // collection.find().toArray(function(err, items) {
+		    //     if(!err){
+		    //     	for(var i = 0;i<items.length;i++){
+			             // park_name.push(items[i]["name"]);
+			             // latitude.push(items[i]["latitude"]);
+			             // longitude.push(items[i]["longitude"]);
+		    //     	}
+			   //  }            
+		    // });
 		    collection.find().toArray(function(err, items) {
 		        if(!err){
 		        	for(var i = 0;i<items.length;i++){
-			             park_name.push(items[i]["name"]);
-			             latitude.push(items[i]["latitude"]);
-			             longitude.push(items[i]["longitude"]);
-		        	}
-			    }            
-		    });
-		    collection1.find().toArray(function(err, items) {
-		        if(!err){
-		        	for(var i = 0;i<items[0]["table"].length;i++){
-			             park_name1.push(items[0]["table"][i]["name"]);
-			             desc.push(items[0]["table"][i]["description"]);
+		        		park_names.push(items[i]["name"]);
+						latitude.push(items[i]["latitude"]);
+						longitude.push(items[i]["longitude"]);
+						desc.push(items[i]["description"]);
+						weather_infos.push(items[i]["weather_info"]);
+						directions_infos.push(items[i]["directions_info"]);
 					}
 		        	callback();
 		        }            
@@ -73,17 +80,14 @@ router.get('/park/:park_name',function(req,res,next){
 	var humidity = [];
 	var sunrise = [];
 	var sunset = [];
-	link_db(park_name,latitude,longitude,park_name1,desc,function(){
-    	for(var i = 0;i<park_name.length;i++){
-    		if(park_name[i]==key_words){
+	link_db(park_names,latitude,longitude,desc,weather_infos,directions_infos,function(){
+    	for(var i = 0;i<park_names.length;i++){
+    		if(park_names[i]==key_words){
     			lat = latitude[i];
     			lon = longitude[i];
-    			break;
-    		}
-    	}
-    	for(var i = 0;i<park_name1.length;i++){
-    		if(park_name1[i]==key_words){
-    			description = desc[i];
+				description = desc[i];
+				weather_info = weather_infos[i];
+				directions_info = directions_infos[i];
     			break;
     		}
     	}
@@ -147,8 +151,6 @@ router.get('/park/:park_name',function(req,res,next){
 			sort:0
 		})
 		.then(function (data) {
-			console.log(lat);
-		    console.log(lon);
 			for(var i = 0;i<5;i++){
 				if(data["businesses"][i]==undefined)
 					break;
@@ -180,7 +182,7 @@ router.get('/park/:park_name',function(req,res,next){
 					    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
 					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
-						    	lat:lat,lon:lon,description:description});
+						    	lat:lat,lon:lon,description:description,weather_info:weather_info,directions_info:directions_info});
 					    	});	
 					    });
 				    });
@@ -199,7 +201,7 @@ router.get('/park/:park_name',function(req,res,next){
 					    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
 					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
-						    	lat:lat,lon:lon,description:description});
+						    	lat:lat,lon:lon,description:description,weather_info:weather_info,directions_info:directions_info});
 					    	});	
 					    });
 				    });
@@ -218,7 +220,7 @@ router.get('/park/:park_name',function(req,res,next){
 					    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
 					    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
 					    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,
-						    	lat:lat,lon:lon,description:description});
+						    	lat:lat,lon:lon,description:description,weather_info:weather_info,directions_info:directions_info});
 					    	});	
 					    });
 				    });
