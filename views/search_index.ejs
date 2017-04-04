@@ -1,0 +1,224 @@
+<html>
+	<head>
+		<title>Search Result</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+		<style>
+		.container{
+			width:80%;
+		}
+		#map{
+			width: 100%;
+			height:75%;
+		}
+		body{
+			background-color: #e6e9ef;
+			font-family: 'Slabo 27px', serif;
+			text-align: center;
+		}
+		table{
+			margin-top:40px;
+			text-align: center;
+			font-size: 36px;
+		}
+		.table>tbody>tr>td{
+			vertical-align: middle;
+		}
+		.index{
+			background-color: #0D3752;
+			color: white!important;
+			border-radius: 10px;
+			width:100px;
+			vertical-align: middle;
+		}
+		tr{
+			height:100px;
+			vertical-align: middle;
+		}
+		.name{
+			width:500px;
+			vertical-align: middle;
+		}
+		.btn{
+			width: 120px;
+			height:60px;
+		}
+		input[type=checkbox] {
+			display:none;
+		}
+		input[type=checkbox] + label
+		{
+			position: absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			margin-left:100px;
+			text-align: center;
+			height: 133px;
+			width: 133px;
+			display:block;
+			padding: 0 0 0 0px;
+			border-radius:50%;
+			opacity:0;
+		}
+		input[type=checkbox]:checked + label
+		{
+			opacity: 1;
+			display: block;
+			margin-left:100px;
+			text-align: center;
+			height: 133px;
+			width: 133px;
+			display:block;
+			padding: 0 0 0 0px;
+			border-radius:50%
+		}
+		a{
+			text-decoration: none!important;
+		}
+		#back-btn{
+			font-size: 24;
+			background-color: #0D3752;
+			border:#0D3752;
+		}
+		</style>
+		<script type="text/javascript">
+			function getURLParameter(name) {
+				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+			}
+		</script>
+    </head>
+    <body>
+	    <% include ../views/layout %>
+
+		<div id="map"></div>
+		<h1 style="font-size: 50px;font-family: 'Slabo 27px', serif;margin-top: 80px;margin-bottom:40px;text-align: center" id="res_title">	  	
+		</h1>
+		<div class="container">
+			<table id="result_table" class="table table-condensed" style="margin-bottom: 50px">
+			</table>
+		</div>
+		<button class="btn btn-info" id = "back-btn"><a href="/" style="
+			color: white!important">Back</a></button>
+		<script>
+			function changeOpacity(){
+				document.getElementById('img').style.opacity='0.7';
+			}
+			function getURLParameter(name) {
+					return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+				};
+			var state_q = decodeURI(getURLParameter('state'));
+			var res_title = document.getElementById('res_title');
+			var activity_q = decodeURI(getURLParameter('activity'));
+			var park_names = [];
+		  	park_names = <%- JSON.stringify(park_name)%>;
+			if(park_names.length==0)
+				res_title.innerHTML = "No park for your search!";
+			else{
+				if(state_q!="null")
+					if(activity_q!="null")
+						res_title.innerHTML = "Search result for National Park in "+ state_q + " and activity: " + activity_q;
+					else
+						res_title.innerHTML = "Search result for National Park in "+ state_q;
+				else
+					if(activity_q!="null")
+						res_title.innerHTML = "Search result for National Park in America with activity: " + activity_q;
+					else
+						res_title.innerHTML = "Search result for National Park in America";
+					
+			}
+			function initMap() {
+				var bounds = new google.maps.LatLngBounds();  
+			    var myLatLng = {lat: 37.09024, lng: -95.712891};
+			    var customMapType = new google.maps.StyledMapType([
+				{
+					stylers: [
+					  {hue: '#4A9797'},
+					  {gamma: 0.5},
+					  {weight: 0.5}
+					]
+				},
+			      {
+			        featureType: 'water',
+			        stylers: [{color: '#0D3752'}]
+			      }
+			    ], {
+			      name: 'Custom Style'
+				});
+				var customMapTypeId = 'custom_style';
+				var map = new google.maps.Map(document.getElementById('map'), {
+					center: myLatLng,
+					scrollwheel: true,
+					zoom: 4,
+					mapTypeControlOptions: {
+					  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
+					}
+				});
+			  	var infowindow = new google.maps.InfoWindow();
+			  	var park_names = [];
+			  	park_names = <%- JSON.stringify(park_name)%>;
+				var latitude = [];
+				latitude = <%- JSON.stringify(latitude)%>;
+				var longitude = [];
+				longitude = <%- JSON.stringify(longitude)%>;
+				var website = [];
+				website = <%- JSON.stringify(website)%>;
+				var state = [];
+				state = <%- JSON.stringify(state)%>;
+				var image_url = [];
+				image_url = <%- JSON.stringify(image_url)%>;
+				var park_activities_code = [];
+				park_activities_code = <%- JSON.stringify(park_activities_code_array)%>;
+				var count = 0;    
+			  	for(var i = 0;i<latitude.length;i++){
+			  		count+=1;
+				  	var pos = {lat:parseFloat(latitude[i]),lng:parseFloat(longitude[i])};
+				  	marker = new google.maps.Marker({
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+				        map:map,
+				        position:pos
+				    });
+				    bounds.extend(pos);
+				    var result_table = document.getElementById('result_table');
+				    var table_text = '';
+				    table_text += '<tr style="vertical-align: middle"><td class="index">'+count+'</td><td><div style="position:relative" align="left"><img src="'+image_url[i]+'" style="border-radius:50%;height:133px;width:133px;margin-left:100px" id="img"><input type="checkbox" name="thing" value="valuable" id="thing'+i+'"/><label for="thing'+i+'" id="label'+i+'"></label></div></td><td class="name">'+park_names[i]+'</td><td>';
+				    for(var j = 0;j<park_activities_code[i].length;j++){
+				    	if(park_activities_code[i][j]<100&&park_activities_code[i][j]!=24)
+						    table_text += '<img src="https://www.recreation.gov/images/activities/icon_actv_'+park_activities_code[i][j].toString()+'.png"></img>';
+						else
+							table_text += '<img src="https://www.recreation.gov/images/activities/icon_blank.png"></img>';
+					}
+					table_text += '</td><td><button class="btn btn-default"><a href="/park/'+park_names[i]+'" style="font-size:30px">Detail</a></button></td></tr>';
+					result_table.innerHTML += table_text;
+				    contentString = '<a href='+ website[i]+'>'+park_names[i]+'</a>';
+				    var num = 'label'+i.toString();
+				    document.getElementById(num).style.background="url('../img/check.png') no-repeat center center";
+					google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+						return function() {
+							infowindow.setContent(contentString);
+							infowindow.open(map, marker);
+						}
+					})(marker,contentString));
+				}
+				map.mapTypes.set(customMapTypeId, customMapType);
+				map.setMapTypeId(customMapTypeId);
+				if(park_names.length!=0){
+					google.maps.event.addListenerOnce(map, 'idle', function() {
+				        map.fitBounds(bounds);
+					});
+					document.getElementById("back-btn").style.display = "none";
+				}
+				else{
+					document.getElementById("result_table").style.margin = "0 0 0 0";
+				}
+		    } 
+	    </script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDikfTOXeaw7tQ65UFLmB-_eqV_AfqCAO4&callback=initMap&language=en"
+	  async defer></script>
+  </body>
+  </html>

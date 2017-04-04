@@ -1,0 +1,317 @@
+var express = require('express');
+var router = express.Router();
+var request = require('request');
+var https = require('https');
+var mysql = require('mysql');
+var MongoClient = require('mongodb').MongoClient;
+var Flickr = require("node-flickr");
+var keys = {"api_key": "338ad28fc7b797a4836746d87db99105"}
+flickr = new Flickr(keys);
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var fs = require('fs');
+// var fs = require('fs');
+var Yelp = require('yelp');
+var yelp = new Yelp({
+  consumer_key: 'E_rk7aM7tlaNP6_EpP5OPw',
+  consumer_secret: 'QsGNsJfZymc3YCHwXv0VxfH0Xiw',
+  token: 'xLKAOVr6r0V-58xWtc2J161uklEmpO9v',
+  token_secret: 'Nx96dUQJRosnDp7qSy_RZZE1vRQ',
+});
+
+
+var park_names = [];
+var directions_infos = [];
+var latitude = [];
+var longitude = [];
+var desc = [];
+var park_codes = [];
+var lat;
+var lon;
+var description;
+var directions_info;
+var park_code;
+
+// Connect string to MySQL
+var connection = mysql.createConnection({
+  host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
+  user     : 'adminUser',
+  password : 'yourPassword986274', // This is not the correct password! Please enter your own.
+  database : 'NationalParksMySql'
+});
+
+function link_db(park_names,latitude,longitude,desc,directions_infos,park_cod,callback){
+	MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
+	  	if(!err) {
+		    console.log("We are connected database: national_park!");
+		    var collection = db.collection('all_parks_info');
+		    collection.find().toArray(function(err, items) {
+		        if(!err){
+		        	for(var i = 0;i<items.length;i++){
+		        		park_names.push(items[i]["name"]);
+						latitude.push(items[i]["latitude"]);
+						longitude.push(items[i]["longitude"]);
+						desc.push(items[i]["description"]);
+						directions_infos.push(items[i]["directions_info"]);
+						park_cod.push(items[i]["park_code"]);
+					}
+		        	callback();
+		        }            
+		    });
+	  	}
+	});
+}
+
+function mysqlQuery(park_name,
+        visitorCenter_name, visitorCenter_phone, visitorCenter_website, visitorCenter_lat, visitorCenter_long,
+        usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
+        callback)
+{
+    var query = "SELECT NP.Id FROM NationalPark NP WHERE NP.name = \"" + park_name + "\";";
+
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        if (rows.length > 0)
+        {
+        var NpId = rows[0].Id;
+        query = "SELECT DISTINCT V.Name, V.Phone, V.Website, V.GPSLat, V.GPSLong FROM NationalPark np, VisitorCenter V WHERE V.NPId = " + NpId + ";";        
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else 
+            {
+                for(var i = 0;i<rows.length;i++)
+                {
+                    visitorCenter_name.push(rows[i].Name);
+                    visitorCenter_phone.push(rows[i].Phone);
+                    visitorCenter_website.push(rows[i].Website);
+                    visitorCenter_lat.push(rows[i].GPSLat);
+                    visitorCenter_long.push(rows[i].GPSLong);
+                }
+            }
+        
+            query = "SELECT DISTINCT A.Name, A.Type, A.Description, A.GPSLat, A.GPSLong FROM NationalPark np, Activities A WHERE A.NPId = " + NpId + " ORDER BY A.Type, A.Name;";
+            connection.query(query, function(err, rows, fields) {
+                if (err) console.log(err);
+                else 
+                {
+                    for(var i = 0;i<rows.length;i++)
+                    {
+                        usrActivity_name.push(rows[i].Name);
+                        usrActivity_type.push(rows[i].Type);
+                        usrActivity_descr.push(rows[i].Description);
+                        usrActivity_lat.push(rows[i].GPSLat);
+                        usrActivity_long.push(rows[i].GPSLong);
+                        //console.log("AName: " + rows[i].Name + "T:" + rows[i].Type + "D:" + rows[i].Description + "Lat:" + rows[i].GPSLat + "Long: " + rows[i].GPSLong);
+                    }
+                    callback();
+                }
+            });
+        });
+        }
+    });
+}
+
+router.get('/park/:park_name',function(req,res,next){
+	var key_words = req.params.park_name;
+	decodeURI(key_words);
+    
+    var visitorCenter_name = [];
+    var visitorCenter_phone = [];
+    var visitorCenter_website = [];
+    var visitorCenter_lat = [];
+    var visitorCenter_long = [];
+
+    
+    var usrActivity_name = [];
+    var usrActivity_type = [];
+    var usrActivity_descr = [];
+    var usrActivity_lat = [];
+    var usrActivity_long = [];
+
+    
+	var bgImg=[];
+	var restaurant_name = [];
+	var restaurant_rating = [];
+	var restaurant_address = [];
+	var restaurant_url = [];
+	var bar_name = [];
+	var bar_rating = [];
+	var bar_address = [];
+	var bar_url = [];
+
+	var weather = [];
+	var weather_code = [];
+    var weather_info = [];
+	var min_temperature = [];
+	var max_temperature = [];
+	var time = [];
+	var humidity = [];
+	var sunrise = [];
+	var sunset = [];
+
+	var park_alert_t = [];
+	var park_alert_d = [];
+	var park_caution_t = [];
+	var park_caution_d = [];
+
+	link_db(park_names,latitude,longitude,desc,directions_infos,park_codes,function(){
+    	for(var i = 0;i<park_names.length;i++){
+    		if(park_names[i]==key_words){
+    			lat = latitude[i];
+    			lon = longitude[i];
+				description = desc[i];
+				directions_info = directions_infos[i];
+				park_code = park_codes[i];
+    			break;
+    		}
+    	}
+		var url = "https://developer.nps.gov/api/v0/alerts?parkCode="+park_code;
+		var item = new Object();
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open('GET',url,false);
+		xmlhttp.setRequestHeader("Authorization", "FD95430A-AA83-4095-AA31-C1C5A8DA02FF");
+		xmlhttp.send(null);
+
+		console.log(url+":"+xmlhttp.status);
+		if(xmlhttp.status===200){
+			item = JSON.parse(xmlhttp.responseText);
+			console.log(item);
+			for(var i = 0;i<item["total"];i++){
+				if(item["data"][i]["category"]!="Caution"){
+					park_alert_t.push(item["data"][i]["title"]);
+					park_alert_d.push(item["data"][i]["description"]);
+				}
+				else{
+					park_caution_t.push(item["data"][i]["title"]);
+					park_caution_d.push(item["data"][i]["description"]);
+				}
+			}
+		}
+	});
+        
+ 
+    
+     mysqlQuery(key_words,
+        visitorCenter_name, visitorCenter_phone, visitorCenter_website, visitorCenter_lat, visitorCenter_long,
+        usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
+        function(){
+
+	
+	function weather_collect(weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,callback){
+		weather_url = "http://api.apixu.com/v1/forecast.json?key=1910d08aadc74902bd950044172202&days=5&q="+lat+","+lon;
+		request({
+		    url: weather_url,
+		    json: true
+		}, function (error, response, body) {
+		    if (!error && response.statusCode === 200) {
+		    	for(var i =0;i<5;i++){
+			        var temp_weather = body["forecast"]["forecastday"][i]["day"]["condition"]["text"];
+			        var temp_weather_code = body["forecast"]["forecastday"][i]["day"]["condition"]["icon"];
+			        var temp_time = body["forecast"]["forecastday"][i]["date"];
+			        var temp_humidity = body["forecast"]["forecastday"][i]["day"]["avghumidity"]+"%";
+			        weather.push(temp_weather);
+			        humidity.push(temp_humidity);
+			        weather_code.push(temp_weather_code);
+			        time.push(temp_time.substring(5,10));
+			        sunrise.push(body["forecast"]["forecastday"][i]["astro"]["sunrise"]);
+			        sunset.push(body["forecast"]["forecastday"][i]["astro"]["sunset"]);
+			        var temp_min_temperature=body["forecast"]["forecastday"][i]["day"]["mintemp_f"];
+			        var temp_max_temperature=body["forecast"]["forecastday"][i]["day"]["maxtemp_f"];
+			        temp_min_temperature = temp_min_temperature.toString();
+			        temp_max_temperature = temp_max_temperature.toString();
+			        temp_min_temperature+="° F";
+			        temp_max_temperature+="° F";
+			        min_temperature.push(temp_min_temperature);
+			        max_temperature.push(temp_max_temperature);
+			    }	    
+				callback();
+		    }
+		});
+	};
+	function yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,callback){	
+		yelp.search({ term: 'restaurant', 
+			ll: lat+","+lon,
+			sort:0,
+			limit:6
+		})
+		.then(function (data) {
+		    for(var i = 0;i<5;i++){
+				if(data["businesses"][i]==undefined)
+					break;
+				restaurant_name.push(data["businesses"][i]["name"]);
+				restaurant_rating.push(data["businesses"][i]["rating_img_url_large"]);
+				restaurant_address.push(data["businesses"][i]["location"]["display_address"]);
+				restaurant_url.push(data["businesses"][i]["image_url"]);
+			}
+			callback();
+		})
+		.catch(function (err) {
+		  console.error(err);
+		});
+	};
+	function yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,callback){	
+		yelp.search({ term: 'bar', 
+			ll: lat+","+lon,
+			sort:0
+		})
+		.then(function (data) {
+			for(var i = 0;i<5;i++){
+				if(data["businesses"][i]==undefined)
+					break;
+				bar_name.push(data["businesses"][i]["name"]);
+				bar_rating.push(data["businesses"][i]["rating_img_url_large"]);
+				bar_address.push(data["businesses"][i]["location"]["display_address"]);
+				bar_url.push(data["businesses"][i]["image_url"]);
+			}
+			callback();
+		})
+		.catch(function (err) {
+		  console.error(err);
+		});
+	};
+	flickr.get("photos.search", {"text": key_words,"sort":"relevance","per_page":200,"page":1,"min_taken_date":"2015-01-01"}, function(err, result){
+	    if (err) return console.error(err);
+	    function flickr_out(result,bgImg,callback){
+	    	var owner = [];
+	    	for(var i = 0;i<result.photos.photo.length;i++){
+	    		if(owner.indexOf(result.photos.photo[i].owner)!=-1)
+	    			continue;
+				if(bgImg.length==3)
+	    			break;
+	    		var owner_temp = result.photos.photo[i].owner;
+		    	flickr.get("photos.getSizes", {"photo_id":result.photos.photo[i].id}, function(err, result1){
+				    if (err) return console.error(err);
+				    var temp_arr = result1.sizes.size;
+				    for(var j = temp_arr.length-1;j>=0;j--){
+						if(parseInt(temp_arr[j].width)>=1024&&temp_arr[j].label.indexOf('Large')!=-1&&
+					    	(parseInt(temp_arr[j].width)/parseInt(temp_arr[j].height))>1.6&&
+					    	(parseInt(temp_arr[j].width)/parseInt(temp_arr[j].height))<2){
+							bgImg.push(temp_arr[j].source); 
+							owner.push(owner_temp); 
+							break;  	
+					    }
+				    }
+			    });
+	    	}
+			callback();
+	    }
+        flickr_out(result,bgImg,function(){
+ 			console.log(park_code);
+    		weather_collect(weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,function(){
+			    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,function(){
+			    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
+			    		res.render('park',{key_words:key_words,bgImg:bgImg,
+			    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
+			    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
+			    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,park_alert_t:park_alert_t,park_alert_d:park_alert_d,park_caution_t:park_caution_t,
+				    	park_caution_d:park_caution_d,lat:lat,lon:lon,description:description,directions_info:directions_info,
+					    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
+                        usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,});
+			    	});	
+			    });
+		    });
+        });
+	});
+    });
+});
+
+module.exports = router;
