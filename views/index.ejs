@@ -11,7 +11,7 @@
 		<style>
 		#index_bng{
 			top:90px;
-			position: relative;
+			position: absolute;
 			width: 100%;
 			height: -moz-calc(100% - 90px);
 			/* WebKit */
@@ -20,18 +20,18 @@
 			height: -o-calc(100% - 90px);
 			/* Standard */
 			height: calc(100% - 90px);
-			background: url('../img/zion_as_index.jpg') center center;
+			background: url('../img/zion_as_index.jpg') center center fixed;
 			background-size: cover;
 			display: block;
 			text-align: center;
 		}
 		#search{
 			width:50%;
-			height:20%;
-			top:40%;
+			height:200px;
+			top:50%;
 			left:25%;
 			background-color: rgba(128,128,128,0.5);
-			position: relative;
+			position: absolute;
 			border-radius: 10px;
 		}
 		h1{
@@ -45,7 +45,10 @@
 			text-shadow: 3px 3px #000000
 		}
 		.form-control{
-			width:150px;
+			width:15%;
+		}
+		#select::after{
+			clear: both;
 		}
 		</style>
 	</head>
@@ -57,19 +60,27 @@
 				<div class='container' style="position: relative;width:initial;">
 					<h2 style="font-family: 'Slabo 27px', serif;color:white">Find park by</h2>
 					<form action="/search_index" method="get">
-						<select name="state" class="form-control" style="left:150px;position: relative;float:left">
-							<option selected="selected" value="">--By State</option>
-							<% for(var i = 0;i<states.length;i++){%>
-								<option value=<%= encodeURI(states[i].name)%>><%= states[i].name%></option>
-							<% } %>
-						</select>
-						<select name="activity" class="form-control" style="right:150px;position: relative;float: right;">
-							<option selected="selected" value="">--By activity--</option>
-							<% for(var i = 0;i<activities.length;i++){%>
-								<option value=<%= encodeURI(activities[i].activity_name)%>><%= activities[i].activity_name%></option>
-							<% } %>
-						</select>
-						<input class="btn btn-info" style="width:200px;height:40px;top: 50px;position: relative;" type="submit" value="Search">
+						<div id = "select">
+							<select name="state" class="form-control" style="left:10%;position: relative;float:left">
+								<option selected="selected" value="">--By State</option>
+								<% for(var i = 0;i<states.length;i++){%>
+									<option value=<%= encodeURI(states[i])%>><%= states[i]%></option>
+								<% } %>
+							</select>
+							<select name="activity" class="form-control" style="left:27%;position: relative;float:left;">
+								<option selected="selected" value="">--By activity--</option>
+								<% for(var i = 0;i<activities.length;i++){%>
+									<option value=<%= encodeURI(activities[i].activity_name)%>><%= activities[i].activity_name%></option>
+								<% } %>
+							</select>
+	                        <select name="user_activity" class="form-control" style="left:44%;position: relative;float:left;">
+								<option selected="selected" value="">--By User activity--</option>
+								<% for(var i = 0;i<my_activities.length;i++){%>
+									<option value=<%= encodeURI(my_activities[i])%>><%= my_activities[i]%></option>
+								<% } %>
+							</select>
+						</div>
+						<input class="btn btn-info" style="width:200px;top:130px;left:40%;position: absolute" type="submit" value="Search">
 					</form>
 				</div>
 			</div>

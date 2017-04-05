@@ -256,7 +256,75 @@
 					</tr>
 				<% } %>
 			</table>
-			<h2>Attraction</h2>
+			<% if(visitorCenter_name.length>0){%>
+            <h2>Visitor Center(s)</h2>
+			<hr/>
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
+				<colgroup span="2"></colgroup>
+				<col>
+				<col>
+				<col>
+				<col>
+				<col>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Phone</th>
+                    <th scope="col">Lat</th>
+                    <th scope="col">Long</th>
+				</tr>
+				<% for(var i = 0;i<visitorCenter_name.length;i++){%>
+					<tr>
+						<td><a href="<%= visitorCenter_website[i]%>" style="color: white!important"><%= visitorCenter_name[i]%></a> </td>
+						<td><%= visitorCenter_phone[i]%></td>
+                        <td><%= visitorCenter_lat[i]%></td>
+                        <td><%= visitorCenter_long[i]%></td>
+					</tr>
+				<% } %>
+			</table>
+			<%}%>
+			<% if(camp_names.length>0){%>
+            <h2>Campgrounds</h2>
+			<hr/>
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
+				<colgroup span="2"></colgroup>
+				<col>
+				<col>
+				<col>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Phone</th>
+				</tr>
+				<% for(var i = 0;i<camp_names.length;i++){%>
+					<tr>
+						<td><%= camp_names[i]%></a> </td>
+						<td><%= camp_phones[i]%></td>
+					</tr>
+				<% } %>
+			</table>
+			<%}%>
+			<% if(usrActivity_name.length>0){%>
+            <h2>Suggested Activities</h2>
+			<hr/>
+			<table border=1 frame=void rules=rows style="width:100%;border-collapse: initial;margin-bottom:150px" align="center">
+				<colgroup span="2"></colgroup>
+				<col>
+				<col>
+				<col>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Type</th>
+                    <th scope="col">Description</th>
+				</tr>
+				<% for(var i = 0;i<usrActivity_name.length;i++){%>
+					<tr>
+						<td><%= usrActivity_name[i]%></td>
+						<td><%= usrActivity_type[i]%></td>
+						<td><%= usrActivity_descr[i]%></td>
+					</tr>
+				<% } %>
+			</table>
+			<% } %>
+			<h2>Business</h2>
 			<hr/>
 			<h3 style="float: left;left:300px;position: relative;" onmouseover="r_over()">Restaurant</h3>
 			<h3 style="float: right;right:300px;position: relative;"" onmouseover="b_over()">Bar</h3>
@@ -264,7 +332,7 @@
 			<% for(var i = 0;i<restaurant_url.length;i++){%>
 				<tr style="height:120px">
 					<td style="width:10%"><%= i+1%></td>
-					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="border-radius: 5px"></td>
+					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="border-radius: 5px;height:100px;width: 100px"></td>
 					<td style="width:30%"><%= restaurant_name[i]%></td>
 					<td style="width:10%"><img src="<%= restaurant_rating[i]%>""></td>
 					<td><%= restaurant_address[i]%></td>
@@ -314,6 +382,8 @@
 						}
 					});
 				  	var infowindow = new google.maps.InfoWindow();
+				  	var labels = [1,2,3,4,5,6,7,8,9,10];
+                    
 				  	var latitude;
 					latitude = <%- JSON.stringify(lat)%>;
 					var longitude;
@@ -322,26 +392,73 @@
 				  	marker = new google.maps.Marker({
 				        map:map,
 				        position:pos,
-				        icon:"http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+				        icon:"http://maps.google.com/mapfiles/ms/icons/red-dot.png"
 				    });
 				    bounds.extend(pos);
-				    var r_lat;
-				    r_lat = <%- JSON.stringify(r_lat)%>;
+                    
+                    var visitorCenter_name;
+                    visitorCenter_name = <%- JSON.stringify(visitorCenter_name)%>;
+                    var visitorCtrLat = [];
+                    visitorCtrLat = <%- JSON.stringify(visitorCenter_lat)%>;
+                    var visitorCtrLong = [];
+                    visitorCtrLong = <%- JSON.stringify(visitorCenter_long)%>;
+                    for(var i = 0;i<visitorCtrLat.length;i++)
+                    {
+                        var pos = {lat:parseFloat(visitorCtrLat[i]),lng:parseFloat(visitorCtrLong[i])};
+                        marker = new google.maps.Marker({
+                            map:map,
+                            position:pos,
+                            icon:"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|7FFFD4|000000"
+                        });
+                        bounds.extend(pos);
+                        var contentString = '<h4>'+visitorCenter_name[i]+'</h4>';
+				    	google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+							return function() {
+								infowindow.setContent(contentString);
+								infowindow.open(map, marker);
+							}
+						})(marker,contentString));
+                    }
+
+                    var usrActivity_name = [];
+                    usrActivity_name = <%- JSON.stringify(usrActivity_name)%>;
+                    var usrActivityLat = [];
+                    usrActivityLat = <%- JSON.stringify(usrActivity_lat)%>;
+                    var usrActivityLong = [];
+                    usrActivityLong = <%- JSON.stringify(usrActivity_long)%>;
+                    for(var i = 0;i<usrActivityLat.length;i++)
+                    {
+                        var pos = {lat:parseFloat(usrActivityLat[i]),lng:parseFloat(usrActivityLong[i])};
+                        marker = new google.maps.Marker({
+                            map:map,
+                            position:pos,
+                            icon:"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|1E90FF|000000"
+                        });
+                        bounds.extend(pos);
+                        var contentString = '<h4>'+usrActivity_name[i]+'</h4>';
+				    	google.maps.event.addListener(marker, 'click', (function(marker,contentString) {
+							return function() {
+								infowindow.setContent(contentString);
+								infowindow.open(map, marker);
+							}
+						})(marker,contentString));
+                    }
+
+                    var r_lat;
+				    r_lat = <%- JSON.stringify(restaurant_lat)%>;
 				    var r_lon;
-				    r_lon = <%- JSON.stringify(r_lon)%>;
+				    r_lon = <%- JSON.stringify(restaurant_lon)%>;
 				    var b_name;
 				    b_name = <%- JSON.stringify(restaurant_name)%>;
-				    var labels = [1,2,3,4,5]
 				    for(var i = 0;i<r_lat.length;i++){
 				    	var pos = {lat:parseFloat(r_lat[i]),lng:parseFloat(r_lon[i])};
 				    	var r_marker = new google.maps.Marker({
 				    		map:map,
 				    		position:pos,
-				    		icon:http:"//chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|FF0000|000000"
-				    		// label: labels[i].toString()
+				    		icon:"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|EEE8AA|000000"
 				    	});
 				    	bounds.extend(pos);
-				    	var contentString = '<h3>'+b_name[i]+'</h3>';
+				    	var contentString = '<h4>'+b_name[i]+'</h4>';
 				    	google.maps.event.addListener(r_marker, 'click', (function(marker,contentString) {
 							return function() {
 								infowindow.setContent(contentString);
@@ -350,24 +467,28 @@
 						})(r_marker,contentString));
 				    }
 
-				 //    if (navigator.geolocation) {
-					//     navigator.geolocation.getCurrentPosition(function(position) {
-					//       var user = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-					//       map.setCenter(pos);
-					//       marker_current = new google.maps.Marker({
-					//         map:map,
-					//         position:user,
-					//         icon:"http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-					//       });
-					//       bounds.extend(user);
-					//   	},function() {
-					//       window.alert("Unable to get your current Location!");
-					//     });
-					//   }
-				 // 	else {
-					//     // Browser doesn't support Geolocation
-					//     window.alert("Unable to get your current Location! Please turn the function on or try other function.");
-					// }
+				    var camp_names;
+				    camp_names = <%- JSON.stringify(camp_names)%>;
+				    var camp_lat;
+				    camp_lat = <%- JSON.stringify(camp_lat)%>;
+				    var camp_lon;
+				    camp_lon = <%- JSON.stringify(camp_lon)%>;
+					for(var i = 0;i<camp_lat.length;i++){
+				    	var pos = {lat:parseFloat(camp_lat[i]),lng:parseFloat(camp_lon[i])};
+				    	var c_marker = new google.maps.Marker({
+				    		map:map,
+				    		position:pos,
+				    		icon:"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|9ACD32|000000"
+				    	});
+				    	bounds.extend(pos);
+				    	var contentString = '<h4>'+camp_names[i]+'</h4>';
+				    	google.maps.event.addListener(c_marker, 'click', (function(marker,contentString) {
+							return function() {
+								infowindow.setContent(contentString);
+								infowindow.open(map, marker);
+							}
+						})(c_marker,contentString));
+				    }
 					map.mapTypes.set(customMapTypeId, customMapType);
 					map.setMapTypeId(customMapTypeId);
 					google.maps.event.addListenerOnce(map, 'idle', function() {
