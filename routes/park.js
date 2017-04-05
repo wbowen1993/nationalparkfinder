@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var https = require('https');
-var mysql = require('mysql');
 var MongoClient = require('mongodb').MongoClient;
 var Flickr = require("node-flickr");
 var keys = {"api_key": "338ad28fc7b797a4836746d87db99105"}
@@ -17,7 +16,13 @@ var yelp = new Yelp({
   token: 'xLKAOVr6r0V-58xWtc2J161uklEmpO9v',
   token_secret: 'Nx96dUQJRosnDp7qSy_RZZE1vRQ',
 });
-
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+	host : 'localhost',
+	user : 'root',
+	password : 'w773980',
+	database : 'npfinder'
+});
 
 var park_names = [];
 var directions_infos = [];
@@ -31,15 +36,7 @@ var description;
 var directions_info;
 var park_code;
 
-// Connect string to MySQL
-var connection = mysql.createConnection({
-  host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
-  user     : 'adminUser',
-  password : 'yourPassword986274', // This is not the correct password! Please enter your own.
-  database : 'NationalParksMySql'
-});
-
-function link_db(park_names,latitude,longitude,desc,directions_infos,park_cod,callback){
+function link_db(park_names,latitude,longitude,desc,directions_infos,park_codes,callback){
 	MongoClient.connect("mongodb://wbowen:11111111@ds147599.mlab.com:47599/national_park", function(err, db) {
 	  	if(!err) {
 		    console.log("We are connected database: national_park!");
@@ -52,7 +49,7 @@ function link_db(park_names,latitude,longitude,desc,directions_infos,park_cod,ca
 						longitude.push(items[i]["longitude"]);
 						desc.push(items[i]["description"]);
 						directions_infos.push(items[i]["directions_info"]);
-						park_cod.push(items[i]["park_code"]);
+						park_codes.push(items[i]["park_code"]);
 					}
 		        	callback();
 		        }            
@@ -61,78 +58,16 @@ function link_db(park_names,latitude,longitude,desc,directions_infos,park_cod,ca
 	});
 }
 
-function mysqlQuery(park_name,
-        visitorCenter_name, visitorCenter_phone, visitorCenter_website, visitorCenter_lat, visitorCenter_long,
-        usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
-        callback)
-{
-    var query = "SELECT NP.Id FROM NationalPark NP WHERE NP.name = \"" + park_name + "\";";
-
-    connection.query(query, function(err, rows, fields) {
-        if (err) console.log(err);
-        if (rows.length > 0)
-        {
-        var NpId = rows[0].Id;
-        query = "SELECT DISTINCT V.Name, V.Phone, V.Website, V.GPSLat, V.GPSLong FROM NationalPark np, VisitorCenter V WHERE V.NPId = " + NpId + ";";        
-        connection.query(query, function(err, rows, fields) {
-            if (err) console.log(err);
-            else 
-            {
-                for(var i = 0;i<rows.length;i++)
-                {
-                    visitorCenter_name.push(rows[i].Name);
-                    visitorCenter_phone.push(rows[i].Phone);
-                    visitorCenter_website.push(rows[i].Website);
-                    visitorCenter_lat.push(rows[i].GPSLat);
-                    visitorCenter_long.push(rows[i].GPSLong);
-                }
-            }
-        
-            query = "SELECT DISTINCT A.Name, A.Type, A.Description, A.GPSLat, A.GPSLong FROM NationalPark np, Activities A WHERE A.NPId = " + NpId + " ORDER BY A.Type, A.Name;";
-            connection.query(query, function(err, rows, fields) {
-                if (err) console.log(err);
-                else 
-                {
-                    for(var i = 0;i<rows.length;i++)
-                    {
-                        usrActivity_name.push(rows[i].Name);
-                        usrActivity_type.push(rows[i].Type);
-                        usrActivity_descr.push(rows[i].Description);
-                        usrActivity_lat.push(rows[i].GPSLat);
-                        usrActivity_long.push(rows[i].GPSLong);
-                        //console.log("AName: " + rows[i].Name + "T:" + rows[i].Type + "D:" + rows[i].Description + "Lat:" + rows[i].GPSLat + "Long: " + rows[i].GPSLong);
-                    }
-                    callback();
-                }
-            });
-        });
-        }
-    });
-}
-
 router.get('/park/:park_name',function(req,res,next){
 	var key_words = req.params.park_name;
 	decodeURI(key_words);
-    
-    var visitorCenter_name = [];
-    var visitorCenter_phone = [];
-    var visitorCenter_website = [];
-    var visitorCenter_lat = [];
-    var visitorCenter_long = [];
-
-    
-    var usrActivity_name = [];
-    var usrActivity_type = [];
-    var usrActivity_descr = [];
-    var usrActivity_lat = [];
-    var usrActivity_long = [];
-
-    
 	var bgImg=[];
 	var restaurant_name = [];
 	var restaurant_rating = [];
 	var restaurant_address = [];
 	var restaurant_url = [];
+	var r_lat = [];
+	var r_lon = [];
 	var bar_name = [];
 	var bar_rating = [];
 	var bar_address = [];
@@ -140,7 +75,6 @@ router.get('/park/:park_name',function(req,res,next){
 
 	var weather = [];
 	var weather_code = [];
-    var weather_info = [];
 	var min_temperature = [];
 	var max_temperature = [];
 	var time = [];
@@ -152,7 +86,7 @@ router.get('/park/:park_name',function(req,res,next){
 	var park_alert_d = [];
 	var park_caution_t = [];
 	var park_caution_d = [];
-
+	
 	link_db(park_names,latitude,longitude,desc,directions_infos,park_codes,function(){
     	for(var i = 0;i<park_names.length;i++){
     		if(park_names[i]==key_words){
@@ -174,7 +108,6 @@ router.get('/park/:park_name',function(req,res,next){
 		console.log(url+":"+xmlhttp.status);
 		if(xmlhttp.status===200){
 			item = JSON.parse(xmlhttp.responseText);
-			console.log(item);
 			for(var i = 0;i<item["total"];i++){
 				if(item["data"][i]["category"]!="Caution"){
 					park_alert_t.push(item["data"][i]["title"]);
@@ -187,13 +120,6 @@ router.get('/park/:park_name',function(req,res,next){
 			}
 		}
 	});
-        
- 
-    
-     mysqlQuery(key_words,
-        visitorCenter_name, visitorCenter_phone, visitorCenter_website, visitorCenter_lat, visitorCenter_long,
-        usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
-        function(){
 
 	
 	function weather_collect(weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,callback){
@@ -227,27 +153,33 @@ router.get('/park/:park_name',function(req,res,next){
 		    }
 		});
 	};
-	function yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,callback){	
-		yelp.search({ term: 'restaurant', 
-			ll: lat+","+lon,
-			sort:0,
-			limit:6
-		})
-		.then(function (data) {
-		    for(var i = 0;i<5;i++){
-				if(data["businesses"][i]==undefined)
-					break;
-				restaurant_name.push(data["businesses"][i]["name"]);
-				restaurant_rating.push(data["businesses"][i]["rating_img_url_large"]);
-				restaurant_address.push(data["businesses"][i]["location"]["display_address"]);
-				restaurant_url.push(data["businesses"][i]["image_url"]);
+	function yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,r_lat,r_lon,callback){
+		var query = "SELECT b.name AS name,address,b.latitude AS lat,b.longitude AS lon,rating_img,img FROM business b inner join nationalpark n on n.Id=b.parkCode where n.name='"+key_words+"'";
+		connection.query(query, function(err, rows, fields) {
+			if (err) console.log(err);
+			else {
+				if(rows.length>5)
+					for(var i = 0;i<5;i++){
+						restaurant_name.push(rows[i].name);
+						restaurant_rating.push(rows[i].rating_img);
+						restaurant_address.push(rows[i].address);
+						restaurant_url.push(rows[i].img);
+						r_lat.push(rows[i].lat);
+						r_lon.push(rows[i].lon);		
+					}
+				else
+					for(var i = 0;i<rows.length;i++){
+						restaurant_name.push(rows[i].name);
+						restaurant_rating.push(rows[i].rating_img);
+						restaurant_address.push(rows[i].address);
+						restaurant_url.push(rows[i].img);
+						r_lat.push(rows[i].lat);
+						r_lon.push(rows[i].lon);		
+					}
+				callback();
 			}
-			callback();
-		})
-		.catch(function (err) {
-		  console.error(err);
-		});
-	};
+		});	
+	}
 	function yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,callback){	
 		yelp.search({ term: 'bar', 
 			ll: lat+","+lon,
@@ -297,21 +229,18 @@ router.get('/park/:park_name',function(req,res,next){
         flickr_out(result,bgImg,function(){
  			console.log(park_code);
     		weather_collect(weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,function(){
-			    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,function(){
+			    yelp_r_collect(restaurant_name,restaurant_rating,restaurant_address,restaurant_url,r_lat,r_lon,function(){
 			    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
 			    		res.render('park',{key_words:key_words,bgImg:bgImg,
 			    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
-			    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,
+			    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,r_lat:r_lat,r_lon:r_lon,
 			    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,park_alert_t:park_alert_t,park_alert_d:park_alert_d,park_caution_t:park_caution_t,
-				    	park_caution_d:park_caution_d,lat:lat,lon:lon,description:description,directions_info:directions_info,
-					    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
-                        usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,});
+				    	park_caution_d:park_caution_d,lat:lat,lon:lon,description:description,directions_info:directions_info});
 			    	});	
 			    });
 		    });
         });
 	});
-    });
 });
 
 module.exports = router;
