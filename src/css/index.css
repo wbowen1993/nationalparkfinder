@@ -1,0 +1,44 @@
+#index_bng{
+	top:90px;
+	position: absolute;
+	width: 100%;
+	height: -moz-calc(100% - 90px);
+	/* WebKit */
+	height: -webkit-calc(100% - 90px);
+	/* Opera */
+	height: -o-calc(100% - 90px);
+	/* Standard */
+	height: calc(100% - 90px);
+	background: url('../img/zion_as_index.jpg');
+	background-position: center;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: block;
+	text-align: center;
+}
+#search{
+	width:50%;
+	height:200px;
+	top:50%;
+	left:25%;
+	background-color: rgba(128,128,128,0.5);
+	position: absolute;
+	border-radius: 10px;
+}
+h1{
+	margin-top: 0;
+	font-family: 'Slabo 27px', serif;
+	color:white;
+	top:35%;
+	font-size: 80px;
+	position: relative;
+	width:100%;
+	text-shadow: 3px 3px #000000
+}
+.form-control{
+	width:15%;
+}
+#select::after{
+	clear: both;
+}

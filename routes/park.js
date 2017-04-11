@@ -7,12 +7,21 @@ var Flickr = require("node-flickr");
 var keys = {"api_key": "338ad28fc7b797a4836746d87db99105"}
 flickr = new Flickr(keys);
 var fs = require('fs');
+
 var Yelp = require('yelp');
 var yelp = new Yelp({
   consumer_key: 'E_rk7aM7tlaNP6_EpP5OPw',
   consumer_secret: 'QsGNsJfZymc3YCHwXv0VxfH0Xiw',
   token: 'xLKAOVr6r0V-58xWtc2J161uklEmpO9v',
   token_secret: 'Nx96dUQJRosnDp7qSy_RZZE1vRQ',
+});
+
+var Twitter = require('twitter');
+var client = new Twitter({
+  consumer_key: '0Mp3W5F6BkTTvrviuQ5p6AZq6',
+  consumer_secret: 'QqesrjGmEAm1FmoOn0iXebny9fD9TqbwYuJXHcLM5rOoq4tA0k',
+  access_token_key: '3437158475-72fxPjQYTKY6NnptL8VBkdbs4ViTczw9poeTSbV',
+  access_token_secret: 'BHq7H0sfpvbo2x73oYMwWRfgVb0V6dYiurFpHjGVpgjcw'
 });
 
 var lat = [];
@@ -40,8 +49,7 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
 	connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
         else{
-        	console.log(rows[0]);
-	        var NpId = rows[0].Id;
+        	var NpId = rows[0].Id;
 	        lat.push(rows[0].latitude);
 	        lon.push(rows[0].longitude);
 	        description.push(rows[0].description);
@@ -185,27 +193,6 @@ function weather_collect(weather,min_temperature,max_temperature,weather_code,ti
 	});
 };
 
-function yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,callback){	
-	yelp.search({ term: 'bar', 
-		ll: lat+","+lon,
-		sort:0
-	})
-	.then(function (data) {
-		for(var i = 0;i<5;i++){
-			if(data["businesses"][i]==undefined)
-				break;
-			bar_name.push(data["businesses"][i]["name"]);
-			bar_rating.push(data["businesses"][i]["rating_img_url_large"]);
-			bar_address.push(data["businesses"][i]["location"]["display_address"]);
-			bar_url.push(data["businesses"][i]["image_url"]);
-		}
-		callback();
-	})
-	.catch(function (err) {
-	  console.error(err);
-	});
-};
-
 function flickr_out(result,bgImg,callback){
 	var owner = [];
 	for(var i = 0;i<result.photos.photo.length;i++){
@@ -258,11 +245,6 @@ router.get('/park/:park_name',function(req,res,next){
 	var restaurant_url = [];
 	var restaurant_lat = [];
 	var restaurant_lon = [];
-	
-	var bar_name = [];
-	var bar_rating = [];
-	var bar_address = [];
-	var bar_url = [];
 
 	var weather = [];
 	var weather_code = [];
@@ -283,6 +265,38 @@ router.get('/park/:park_name',function(req,res,next){
 	var camp_phones = [];
 	var camp_lat = [];
 	var camp_lon = [];
+
+	var t_text = [];
+	var t_username = [];
+	var t_screenname = [];
+	var t_bng = [];
+	var t_user_img = [];
+	var t_img = [];
+	
+	var tweet_q = key_words;
+	client.get('search/tweets', {q: tweet_q,count:1000}, function(error, tweets, response) {
+		var count = 0;
+		for(var i = 0;i<tweets.statuses.length;i++){
+			if(count==5)
+				break;
+			var arr = tweets.statuses[i];
+			console.log(arr.text+"-------"+arr.user.name);
+			if(arr.entities.media!=undefined){
+				var media = arr.entities.media;
+				if(media[0].type=="photo"){
+					if(t_img.indexOf(media[0].media_url)==-1){
+						count++;
+						t_text.push(arr.text);
+						t_img.push(media[0].media_url);
+						t_username.push(arr.user.name);
+						t_screenname.push(arr.user.screen_name);
+						t_bng.push(arr.user.profile_banner_url);
+						t_user_img.push(arr.user.profile_image_url);	
+					}
+				}
+			}
+		}
+	});
     
      mysqlQuery(key_words,lat,lon,description,directions_info,
         visitorCenter_name, visitorCenter_phone, visitorCenter_website, visitorCenter_lat, visitorCenter_long,
@@ -295,16 +309,14 @@ router.get('/park/:park_name',function(req,res,next){
 			    if (err) return console.error(err);
 		        flickr_out(result,bgImg,function(){
 		 			weather_collect(weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,function(){
-				    	yelp_b_collect(bar_name,bar_rating,bar_address,bar_url,function(){
-				    		res.render('park',{key_words:key_words,bgImg:bgImg,
-				    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
-				    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,restaurant_lat:restaurant_lat,restaurant_lon:restaurant_lon,
-				    		bar_name:bar_name,bar_rating:bar_rating,bar_address:bar_address,bar_url:bar_url,park_alert_t:park_alert_t,park_alert_d:park_alert_d,park_caution_t:park_caution_t,
-					    	park_caution_d:park_caution_d,lat:lat[0],lon:lon[0],description:description[0],directions_info:directions_info[0],
-						    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
-	                        usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,
-	                        camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon});
-				    	});
+			    		res.render('park',{key_words:key_words,bgImg:bgImg,t_text:t_text,t_username:t_username,t_screenname:t_screenname,t_bng:t_bng,t_user_img:t_user_img,t_img:t_img,
+			    		time:time,weather:weather,humidity:humidity,min_temperature:min_temperature,max_temperature:max_temperature,weather_code:weather_code,sunrise:sunrise,sunset:sunset,
+			    		restaurant_name:restaurant_name,restaurant_rating:restaurant_rating,restaurant_address:restaurant_address,restaurant_url:restaurant_url,restaurant_lat:restaurant_lat,restaurant_lon:restaurant_lon,
+			    		park_alert_t:park_alert_t,park_alert_d:park_alert_d,park_caution_t:park_caution_t,park_caution_d:park_caution_d,
+				    	lat:lat[0],lon:lon[0],description:description[0],directions_info:directions_info[0],
+					    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
+                        usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,
+                        camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon});
 				    });
 		        });
 			});

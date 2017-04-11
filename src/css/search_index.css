@@ -1,0 +1,77 @@
+.container{
+	width:80%;
+}
+#map{
+	width: 100%;
+	height:75%;
+}
+body{
+	background-color: #e6e9ef;
+	font-family: 'Slabo 27px', serif;
+	text-align: center;
+}
+table{
+	margin-top:40px;
+	text-align: center;
+	font-size: 36px;
+}
+.table>tbody>tr>td{
+	vertical-align: middle;
+}
+.index{
+	background-color: #0D3752;
+	color: white!important;
+	border-radius: 10px;
+	width:100px;
+	vertical-align: middle;
+}
+tr{
+	height:100px;
+	vertical-align: middle;
+}
+.name{
+	width:500px;
+	vertical-align: middle;
+}
+.btn{
+	width: 120px;
+	height:60px;
+}
+input[type=checkbox] {
+	display:none;
+}
+input[type=checkbox] + label
+{
+	position: absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	margin-left:100px;
+	text-align: center;
+	height: 133px;
+	width: 133px;
+	display:block;
+	padding: 0 0 0 0px;
+	border-radius:50%;
+	opacity:0;
+}
+input[type=checkbox]:checked + label
+{
+	opacity: 1;
+	display: block;
+	margin-left:100px;
+	text-align: center;
+	height: 133px;
+	width: 133px;
+	display:block;
+	padding: 0 0 0 0px;
+	border-radius:50%
+}
+a{
+	text-decoration: none!important;
+}
+#back-btn{
+	font-size: 24;
+	background-color: #0D3752;
+	border:#0D3752;
+}

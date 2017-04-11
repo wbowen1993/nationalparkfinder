@@ -6,122 +6,10 @@
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
 		<link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
-
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
-
+		<link rel="stylesheet" type="text/css" href="../css/park.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<script src="../js/jquery-3.1.1.min.js"></script>
-		<style>
-			.container{
-				width: 75%
-			}
-			#bg{
-				height:750px;
-				width:100%;
-				transition: background 1s linear;
-			    -moz-transition: background 1s linear; /* Firefox 4 */
-			    -webkit-transition: background 1s linear; /* Safari and Chrome */
-			    -o-transition: background 1s linear; /* Opera */
-			}
-			body{
-				background-color: #e6e9ef;
-			}
-			h2{
-				margin-top: 50px;
-				margin-bottom: 15px;
-				font-size: 60px;
-				text-align: center;
-				font-family: 'Slabo 27px', serif;
-				color: #0D3752
-			}
-			h3{
-				font-size: 30px;
-				text-align: center;
-				font-family: 'Slabo 27px', serif;
-				color: #0D3752;
-				margin-top:0;
-				margin-bottom: 20px;
-			}
-			hr{
-				 height:5px;
-				 border-radius:5px;
-				 color:#0D3752;
-				 background-color:#0D3752;
-			}
-			button{
-			    margin-top: 350px;
-			    height: 100px;
-			    width: 50px;
-			    background: aliceblue;
-			    border: none;
-			    opacity: 0.6;
-			    font-size: xx-large;
-			}
-			button:hover{
-				opacity: 0.4;
-			}
-			table{
-				background: #34495E;
-				color: #fff;
-				border-radius: .4em;
-				overflow: hidden;
-				font-family: Montserrat, sans-serif;
-				text-align: center;
-			}
-			th{
-				text-align: center;
-				color: #dd5;
-			}
-			tr{
-				height:50px;
-				font-size: 20px;
-				border-spacing: 3px;
-				opacity: 1;
-			}
-			tr:hover{
-				opacity: 0.9;
-			}
-			td{
-			    border-color: lighten(#34495E, 10%);
-			}
-			.list-group-item{
-				font-size: 20px;
-				border:none;
-				background:transparent;
-			}
-			#restaurant{
-				display: block;
-			}
-			#bar{
-				display: none;
-			}
-			#desc{
-				display: inline-block;
-			}
-			#dire_info{
-				display: none;
-				clear: left;
-			}
-			#map{
-				width: 100%;
-				height:500px;
-			}
-			p{
-				font-size: 24px;
-				font-family:'Slabo 27px', serif;
-				color: #0D3752;
-			}
-			.alert_table{
-				background: transparent;
-				border-collapse: initial;
-				padding: 5px;
-				color:#0D3752!important;
-				text-align: left;
-			}
-			.alert_icon{
-				padding: 10px;
-			}
-		</style>
 	</head>
 	<body>
 		<% include ../views/layout %>
@@ -171,14 +59,6 @@
 					document.getElementById('bg').style.background = "url('"+<%- JSON.stringify(bgImg[0])%>+"') no-repeat center center";
 					document.getElementById('bg').style.backgroundSize = "cover";
 				}
-			}
-			function r_over(){
-				document.getElementById('restaurant').style.display = "block";
-				document.getElementById('bar').style.display = "none";
-			}
-			function b_over(){
-				document.getElementById('restaurant').style.display = "none";
-				document.getElementById('bar').style.display = "block";
 			}
 			function _1_over(){
 				document.getElementById('desc').style.display = "inline-block";
@@ -311,48 +191,69 @@
 				<col>
 				<col>
 				<tr>
-					<th scope="col">Name</th>
-					<th scope="col">Type</th>
+					<th scope="col" style="width: 15%">Name</th>
+					<th scope="col" style="width: 15%">Type</th>
                     <th scope="col">Description</th>
 				</tr>
 				<% for(var i = 0;i<usrActivity_name.length;i++){%>
 					<tr>
 						<td><%= usrActivity_name[i]%></td>
 						<td><%= usrActivity_type[i]%></td>
-						<td><%= usrActivity_descr[i]%></td>
+						<td style="text-align: justify"><%= usrActivity_descr[i]%></td>
 					</tr>
 				<% } %>
 			</table>
 			<% } %>
-			<h2>Business</h2>
+			<% for(var i = 0;i<restaurant_name.length;i++){%>
+			<h2>Restaurant</h2>
 			<hr/>
-			<h3 style="float: left;left:300px;position: relative;" onmouseover="r_over()">Restaurant</h3>
-			<h3 style="float: right;right:300px;position: relative;"" onmouseover="b_over()">Bar</h3>
 			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center" id="restaurant">
 			<% for(var i = 0;i<restaurant_url.length;i++){%>
 				<tr style="height:120px">
 					<td style="width:10%"><%= i+1%></td>
 					<td style="width:15%"><img src="<%= restaurant_url[i]%>" style="border-radius: 5px;height:100px;width: 100px"></td>
 					<td style="width:30%"><%= restaurant_name[i]%></td>
-					<td style="width:10%"><img src="<%= restaurant_rating[i]%>""></td>
+					<td style="width:10%"><img src="<%= restaurant_rating[i]%>"></td>
 					<td><%= restaurant_address[i]%></td>
 				</tr>
 			<% } %>
 			</table>
-			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center" id="bar">
-			<% for(var i = 0;i<bar_url.length;i++){%>
-				<tr style="height:120px">
-					<td style="width:10%"><%= i+1%></td>
-					<td style="width:15%"><img src="<%= bar_url[i]%>" style="height:100px;border-radius: 5px"></td>
-					<td style="width:30%"><%= bar_name[i]%></td>
-					<td style="width:10%"><img src="<%= bar_rating[i]%>""></td>
-					<td><%= bar_address[i]%></td>
-				</tr>
 			<% } %>
-			</table>
 			<h2>Map</h2>
 			<hr/>
-			<div id="map">
+			<div id="map"></div>
+			<div>
+				<h2>Twitter</h2>
+				<hr/>
+				<div id="twitter_board">
+					<table>
+						<tr>
+							<% for(var i = 0;i<4;i++){%>
+								<td>
+									<div class="profile_bng"  style="background: url(<%= t_bng[i]%>) no-repeat center center;
+				background-size: cover;">							
+										<div class="profile_img">
+										<img src="<%= t_user_img[i]%>" style="width:48px;height: 48px">
+										</div>
+										<div class="user_names">
+										<a href='http://twitter.com/<%= t_screenname[i]%>'><strong style="font-size: 12px"><%= t_username[i]%></strong></a>
+										<p style="font-size: 12px;display: inline"><%= t_screenname[i]%></p>
+										</div>
+									</div>
+									<div class="tweet_content">
+										<div class="tweet_img" style="background: url(<%= t_img[i]%>) no-repeat center center;
+				background-size: cover;">
+										</div>
+										<div class="tweet_text">
+										<p><%= t_text[i]%></p>
+										</div>
+									</div>
+								</td>
+							<%}%>
+						</tr>
+					</table>
+				</div>
+			</div>
 			<script>
 				function initMap() {
 					var bounds = new google.maps.LatLngBounds();  
@@ -498,7 +399,6 @@
 				</script>
 				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDikfTOXeaw7tQ65UFLmB-_eqV_AfqCAO4&callback=initMap&language=en"
 		  async defer></script>
-			</div>
 		</div>
 	</body>
 </html>
