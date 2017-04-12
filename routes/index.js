@@ -5,8 +5,9 @@ var MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
 
 var states = [];
-var activities;
 var my_activities = [];
+var activities;
+
 
 // Connect string to MySQL
 var connection = mysql.createConnection({
@@ -19,7 +20,7 @@ var connection = mysql.createConnection({
 // Connect to the db
 MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info", function(err, db) {
   if(!err) {
-    console.log("We are connected to database:states_info!");
+    // console.log("We are connected to database:states_info!");
     var collection = db.collection('activity');
     collection.find().toArray(function(err, items) {
         if(!err) 
@@ -29,6 +30,7 @@ MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info
 });
 
 function userActivitiesQuery(my_activities,callback){
+    my_activities.length = 0;
     var query = "SELECT DISTINCT Type FROM Activities ORDER BY Type";
     connection.query(query, function(err, rows, fields) {
       if (err) console.log(err);
@@ -36,7 +38,7 @@ function userActivitiesQuery(my_activities,callback){
       {
           my_activities.push("Any");
           for(var i = 0;i<rows.length;i++){
-              console.log("Type: " + rows[i].Type);
+              // console.log("Type: " + rows[i].Type);
               my_activities.push(rows[i].Type);
           }
           callback();
@@ -45,13 +47,14 @@ function userActivitiesQuery(my_activities,callback){
 }
 
 function statesQuery(state,callback){
-  var query = "SELECT DISTINCT state FROM NationalPark";
+  state.length = 0;
+  var query = "SELECT DISTINCT state FROM NationalPark ORDER BY state";
   connection.query(query, function(err, rows, fields) {
       if (err) console.log(err);
       else{
           for(var i = 0;i<rows.length;i++)
           {
-              console.log(rows[i].state);
+              // console.log(rows[i].state);
               states.push(rows[i].state);
           }
           callback();
