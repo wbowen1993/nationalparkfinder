@@ -6,7 +6,7 @@ var fs = require('fs');
 
 var states = [];
 var my_activities = [];
-var activities;
+var activities = [];
 
 
 // Connect string to MySQL
@@ -21,10 +21,12 @@ var connection = mysql.createConnection({
 MongoClient.connect("mongodb://wbowen:w773980@ds147079.mlab.com:47079/state_info", function(err, db) {
   if(!err) {
     // console.log("We are connected to database:states_info!");
+    activities.length = 0;
     var collection = db.collection('activity');
     collection.find().toArray(function(err, items) {
-        if(!err) 
-	        activities = items;            
+        if(!err)
+        for(var i = 0;i<items.length;i++) 
+	        activities.push((items[i].activity_name).toUpperCase());            
     });
   }
 });
@@ -36,7 +38,6 @@ function userActivitiesQuery(my_activities,callback){
       if (err) console.log(err);
       else 
       {
-          my_activities.push("Any");
           for(var i = 0;i<rows.length;i++){
               // console.log("Type: " + rows[i].Type);
               my_activities.push(rows[i].Type);

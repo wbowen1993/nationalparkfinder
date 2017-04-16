@@ -27,7 +27,7 @@
 							<select name="activity" class="form-control" style="left:27%;position: relative;float:left;">
 								<option selected="selected" value="">--By activity--</option>
 								<% for(var i = 0;i<activities.length;i++){%>
-									<option value=<%= encodeURI(activities[i].activity_name)%>><%= activities[i].activity_name%></option>
+									<option value=<%= encodeURI(activities[i])%>><%= activities[i]%></option>
 								<% } %>
 							</select>
 	                        <select name="user_activity" class="form-control" style="left:44%;position: relative;float:left;">
