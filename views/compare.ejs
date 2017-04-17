@@ -1,0 +1,45 @@
+<html>
+	<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../css/compare.css">
+	<script>
+		function sort(){
+			// console.log(window.location.href+"&method="+document.getElementById('select').value);
+			var origin_url = window.location.href;
+			if(origin_url.indexOf("&method=")!=-1){
+				origin_url = origin_url.substring(0,origin_url.indexOf("&method="));
+			}
+			window.location.href = origin_url+"&method="+document.getElementById('select').value;
+		}
+	</script>
+	<body>
+		<% include ../views/layout %>
+		<div class="wrapper">
+			<h1>Park Comparison</h1>
+			<div id = "form">
+				<!-- <form method="get" id="form"> -->
+					<select name="method" id="select">
+						<option value="A">Alphabetical(A-Z)</option>
+						<option value="T_D">Average Temperature(High-Low)</option>
+						<option value="T_A">Average Temperature(Low-High)</option>
+						<option value="R_N">#Restaurant</option>
+						<option value="R_R">Average Rating of Restaurant</option>
+					</select>
+					<!-- <input type="submit" value="submit" id="submit" onclick="sort()"> -->
+					<button onclick="sort()">Sort</button>
+				</form>
+			</div>
+			<div id = "table">
+				<table id="result_table" class="table table-condensed" style="margin-bottom: 50px">
+					<% for(var i = 0;i<parks.length;i++){%>
+					<tr>
+						<td class="td_tag"><%= i+1%></td>
+						<td class='td_img'><img src="<%= img_url[i]%>"></td>
+						<td><%= names[i]%></td>
+						<td><%= r_num[i]%></td>
+					</tr>
+					<%}%>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

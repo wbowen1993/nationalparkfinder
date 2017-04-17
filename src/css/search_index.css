@@ -75,3 +75,13 @@ a{
 	background-color: #0D3752;
 	border:#0D3752;
 }
+#compare{
+	font-family: 'Slabo 27px', serif;
+	font-size: 24px;
+	width:200px;
+	background-color: #ff1a8c;
+	border:none;
+}
+#compare:focus{
+	outline: 0;
+}

@@ -5,6 +5,7 @@ var path = require('path');
 var index = require('./routes/index');
 var search_index = require('./routes/search_index');
 var park = require('./routes/park');
+var compare = require('./routes/compare');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use('/',index);
 app.use('/',park);
 app.use('/',search_index);
+app.use('/',compare);
 
 app.listen(port,function(){
 	console.log('server started '+port);

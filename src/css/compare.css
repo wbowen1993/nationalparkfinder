@@ -1,0 +1,90 @@
+body{
+	margin: 0;
+	background: url("../img/Bryce_milky.jpg");
+	top:90px;
+	position: absolute;
+	width: 100%;
+	height: -moz-calc(100% - 90px);
+	height: -webkit-calc(100% - 90px);
+	height: -o-calc(100% - 90px);
+	height: calc(100% - 90px);
+	background-position: center;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: block;
+	text-align: center;
+}
+.wrapper{
+    width: 90%;
+    background: rgba(200,200,200,0.9);
+    margin: auto;
+    top: 50px;
+    position: relative;
+    border-radius: 10px;
+    padding: 20px;
+}
+h1{
+	font-size:50px;
+	font-family: 'Slabo 27px', serif;
+	color: #0d3752!important;
+}
+table{
+	margin-top: 50px;
+	margin: auto;
+	width:80%;
+	background: #0d3752;
+	border-radius: 5px;
+	padding: 5px;
+}
+td{
+	font-size: 24px;
+	color:white!important;
+	font-family: 'Slabo 27px', serif;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+select{
+	margin-bottom: 50px;
+	width:300px;
+	height:50px;
+	border-radius: 4px;
+	border:1px solid white;
+}
+button{
+	width:100px;
+	height:50px;
+	margin-left: 30px;
+	background-color:#00bbff;
+	border:none;
+	border-radius: 4px;
+	font-family: 'Slabo 27px', serif;
+	font-size:24px;
+	color: white!important;
+}
+tr{
+	padding: 10px;
+}
+.td_img{
+	padding-left: 30px;
+}
+.td_tag{
+	background-color: #e6e6e6;
+	font-size: 48px;
+	color: #0d3752!important;
+	width: 8%;
+	border-radius: 5px;
+	text-align: center;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+img{
+	border-radius:50%;
+	height:133px;
+	width:133px;
+	transition: all .2s ease-in-out;
+}
+img:hover{
+	transform: scale(1.2);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
