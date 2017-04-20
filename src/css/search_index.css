@@ -8,7 +8,7 @@
 body{
 	background-color: #e6e9ef;
 	font-family: 'Slabo 27px', serif;
-	text-align: center;
+	/*text-align: center;*/
 }
 table{
 	margin-top:40px;
@@ -81,6 +81,8 @@ a{
 	width:200px;
 	background-color: #ff1a8c;
 	border:none;
+	left:45%;
+	position: relative;
 }
 #compare:focus{
 	outline: 0;

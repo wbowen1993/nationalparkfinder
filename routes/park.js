@@ -43,8 +43,11 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
         park_alert_t,park_alert_d,park_caution_t,park_caution_d,
         restaurant_name,restaurant_rating,restaurant_address,restaurant_url,restaurant_lat,restaurant_lon,
         camp_names,camp_phones,camp_lat,camp_lon,
-        callback)
-{
+        callback){
+	lat.length = 0;
+	lon.length = 0;
+	description.length = 0;
+	directions_info.length = 0;
 	var query = "SELECT Id,description,latitude,longitude,directions_info FROM NationalPark WHERE name = '"+park_name+"';";
 	connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
@@ -221,6 +224,10 @@ function flickr_out(result,bgImg,callback){
 
 
 router.get('/park/:park_name',function(req,res,next){
+	var session = "false";
+    if(req.session&&req.session.user){
+      session = "true";
+    }
 	var key_words = req.params.park_name;
 	decodeURI(key_words);
     
@@ -280,7 +287,7 @@ router.get('/park/:park_name',function(req,res,next){
 			if(count==5)
 				break;
 			var arr = tweets.statuses[i];
-			console.log(arr.text+"-------"+arr.user.name);
+			// console.log(arr.text+"-------"+arr.user.name);
 			if(arr.entities.media!=undefined){
 				var media = arr.entities.media;
 				if(media[0].type=="photo"){
@@ -316,7 +323,7 @@ router.get('/park/:park_name',function(req,res,next){
 				    	lat:lat[0],lon:lon[0],description:description[0],directions_info:directions_info[0],
 					    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
                         usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,
-                        camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon});
+                        camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon,session:session});
 				    });
 		        });
 			});

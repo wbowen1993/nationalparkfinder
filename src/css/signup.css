@@ -1,0 +1,94 @@
+body{
+	background: url('../img/glacier_as_index.jpg');
+	background-position: center;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: 0;
+}
+h1{
+	text-align: center;
+	vertical-align: center;
+	font-size: 24px;
+	padding-top: 16px;
+	margin:0;
+	font-family: 'Palanquin Dark', sans-serif;
+}
+button{
+	width:100%;
+	height:70px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border:none;
+	position: absolute;
+	bottom:0;
+	background-color: #0d3752;
+	font-size: 24px;
+	font-family: 'Palanquin Dark', sans-serif;
+	cursor: pointer;
+}
+a{
+	color: white!important;
+	text-decoration: none;
+}button:focus {
+	outline:0;
+}
+button:hover{
+	opacity: 0.85;
+}
+input[type=text],input[type=password]{
+    border: 1px solid #ccc;
+	height: 40px;
+	width:60%;
+	position: relative;
+	left:20%;
+	margin: auto;
+	padding: 10px 12px;
+	border-radius: 4px;
+}
+input[type=submit]{
+	width:100%;
+	position: absolute;
+	box-shadow: none;
+	border:0;
+	left:0;
+	height:70px;
+	bottom: 70px;
+	background-color: #3cb371;
+	font-size: 24px;
+	font-family: 'Palanquin Dark', sans-serif;
+	color: white!important;
+	cursor: pointer;
+}
+input[type=submit]:hover{
+	background-color: #53c697;
+}
+.email{
+	top:30px;
+}
+.password{
+	display: inline;
+	top:50px;
+}
+.lastname{
+	top:70px;
+}
+.firstname{
+	top:90px;
+}
+#form{
+	position: relative;
+	top:25%;
+	width: 25%;
+	height:500px;
+	margin: auto;
+	background-color: rgba(245,245,220,1);
+	border-radius: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#signup_div{
+	display: block;
+}
+#signup_banner{
+	color:#0d3752;
+}

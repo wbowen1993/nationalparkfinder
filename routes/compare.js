@@ -61,6 +61,10 @@ function query(names,code,method,img_url,r_num,callback){
 router.get('/compare',function(req,res,next)
 {
     // Input
+    var session = "false";
+    if(req.session&&req.session.user){
+      session = "true";
+    }
     var queryData = url.parse(req.url, true).query;
     var parks = decodeURI(queryData["park"]);
 	var method = decodeURI(queryData["method"]);
@@ -75,7 +79,7 @@ router.get('/compare',function(req,res,next)
 	    }
     }
 	query(names,parks_code,method,img_url,r_num,function(){
-	    res.render('compare',{parks:parks_code,names:names,img_url:img_url,r_num:r_num});
+	    res.render('compare',{parks:parks_code,names:names,img_url:img_url,r_num:r_num,session:session});
 	});
 });
 

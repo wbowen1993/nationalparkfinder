@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var MongoClient = require('mongodb').MongoClient;
-var fs = require('fs');
 
 var states = [];
 var my_activities = [];
@@ -64,10 +63,14 @@ function statesQuery(state,callback){
 }
 
 router.get('/',function(req,res,next){
+    var session = "false";
+    if(req.session&&req.session.user){
+      session = "true";
+    }
     userActivitiesQuery(my_activities,function(){
         // console.log(states.length);
         statesQuery(states,function(){
-            res.render('index',{states: states,activities:activities, my_activities:my_activities});
+            res.render('index',{states: states,activities:activities, my_activities:my_activities,session:session});
         });
     });
 });

@@ -13,6 +13,17 @@
 	</head>
 	<body>
 		<% include ../views/layout %>
+		<script type="text/javascript">
+			var session = <%- JSON.stringify(session)%>;
+			if(session=="true"){
+				document.getElementById('signin_div').style.display='none';
+				document.getElementById('logout_div').style.display='inline';
+			}
+			else{
+				document.getElementById('signin_div').style.display='inline';
+				document.getElementById('logout_div').style.display='none';	
+			}
+		</script>
 		<div id="bg" style="background: url(<%= bgImg[0]%>) no-repeat center center;
 				background-size: cover;">
 		<h1 style="font-size: 70px;font-family: 'Bungee Shade', cursive;
@@ -69,8 +80,8 @@
 				document.getElementById('dire_info').style.display = "inline-block";
 			}
 			</script>
-		<button id="left" style="float: left;" onclick="prevImg()">&#10094;</button>
-		<button id="right" style="float: right;" onclick="nextImg()">&#10095;</button>
+		<button id="left" style="float: left;" onclick="prevImg()" class="page">&#10094;</button>
+		<button id="right" style="float: right;" onclick="nextImg()" class="page">&#10095;</button>
 		</div>
 		<div class="container" style="margin-bottom: 100px">
 			<% if(park_alert_t.length>0||park_caution_t.length>0){%>

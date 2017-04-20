@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>Dashboard</title>
+		<link rel="stylesheet" type="text/css" href="../css/profile.css">
+		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+	</head>
+	<body>
+	    <% include ../views/layout %>
+	    <script type="text/javascript">
+			var session = <%- JSON.stringify(session)%>;
+			if(session=="true"){
+				document.getElementById('signin_div').style.display='none';
+				document.getElementById('logout_div').style.display='inline';
+			}
+			else{
+				document.getElementById('signin_div').style.display='inline';
+				document.getElementById('logout_div').style.display='none';	
+			}
+		</script>
+	    <div id="wrapper">
+		    <div id="user_info">
+		    	<h1>Email:    <%= email%></h1>
+				<h1>Last name:    <%= lastname%></h1>
+				<h1>First name:    <%= firstname%></h1>
+			</div>
+		</div>
+	</body>
+</html>

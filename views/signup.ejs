@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>Sign Up</title>
+		<link rel="stylesheet" type="text/css" href="../css/signup.css">
+		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+	</head>
+	<body>
+	    <% include ../views/layout %>
+		<div id="form">
+			<div id="signup_div">
+				<h1 id="signup_banner">Come and Join Us!</h1>
+				<form class="form" action="/signup" method="POST" id="signup">
+					<input type="text" name="email" placeholder="Email Address" class="email">
+					<input type="password" name="password" placeholder="password" class="password">
+					<input type="text" name="lastname" placeholder="Last Name" class="lastname">
+					<input type="text" name="firstname" placeholder="First Name" class="firstname">
+					<input type="submit" value="SUBMIT">
+				</form>
+				<button id='signin'><a href="/login">SIGN IN</a></button>
+			</div>
+		</div>
+	</body>
+</html>

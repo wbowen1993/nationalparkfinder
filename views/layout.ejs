@@ -1,19 +1,72 @@
 <html>
+	<head>
+		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+		<style>
+			nav button:focus{
+				outline: 0;
+			}
+			nav a{
+				text-decoration:none!important;
+				color:white!important;
+				font-family: 'Palanquin Dark', sans-serif;
+				font-size:20px;
+				padding: 0;
+			}
+			.dash_btn{
+				position: absolute;
+				height: 70px;
+				float: right;				
+				top: 10px;
+				border: none;
+				background: transparent;
+			}
+			#signin_div{
+				display: inline;
+			}
+			#logout_div{
+				display: none;
+			}
+			#login_btn{
+				width: 100px;
+				right: 140px;
+			}
+			#logout_btn{
+			    width: 100px;
+			    right: 50px;
+			}
+			#dashboard{
+				width: 110px;
+				right: 160px;
+			}
+			#navbar{
+				background-color: #0d3752;
+				background-image: none;
+				top:0;
+				z-index:10000;
+				height:90px;
+				border-radius: 0px;
+				border-width: 0;
+				margin-bottom:0;
+				position: fixed;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+				width:100%;
+			}
+		</style>
+	</head>
 	<body>
-		<nav class="navbar navbar-inverse" role="navigation" style="background-color: #0d3752;
-		background-image: none;
-		top:0;
-		z-index:10000;
-		  height:90px;
-		  border-radius: 0px;
-		  border-width: 0;
-		  margin-bottom:0;
-		  position: fixed;
-		  width:100%;
-		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-		  >
-		    <a href="/" style="color: white!important;font-family: 'Slabo 27px', serif;font-size:24px;display:inline-block;width:100%;text-align:center;
+		<nav class="navbar navbar-inverse" role="navigation" id="navbar">
+		    <a href="/" style="display:inline-block;
+		    position: relative;left: 48%;
 		    text-decoration:none!important"><img src="../img/logo.png" style="height:72px;margin-top:10px"></a>
+		    <div id="signin_div">
+			    <img src="../img/login.png" style="height:50px;width:50px;float: right;position: relative;right: 230px;top:20px">
+			    <button id="login_btn" class="dash_btn"><a href="/login">Log in</a></button>
+		    </div>
+		    <div id="logout_div">
+			    <img src="../img/logout.png" style="height:50px;width:50px;float: right;position: relative;right: 300px;top:20px">
+			    <button id="dashboard" class="dash_btn"><a href="/profile">Dashboard</a></button>
+			    <button id="logout_btn" class="dash_btn"><a href="/logout">Log out</a></button>
+		    </div>
 		</nav>
 	</body>
 </html>

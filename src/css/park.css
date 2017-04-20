@@ -28,7 +28,7 @@ hr{
 	 color:#0D3752;
 	 background-color:#0D3752;
 }
-button{
+.page{
     margin-top: 350px;
     height: 100px;
     width: 50px;
@@ -37,8 +37,8 @@ button{
     opacity: 0.6;
     font-size: xx-large;
 }
-button:hover{
-	opacity: 0.4;
+.page:hover{
+	opacity: 0.5;
 }
 table{
 	background: #34495E;

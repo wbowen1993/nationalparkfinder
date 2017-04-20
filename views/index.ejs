@@ -11,6 +11,17 @@
 	</head>
 	<body>
 		<% include ../views/layout %>
+		<script type="text/javascript">
+			var session = <%- JSON.stringify(session)%>;
+			if(session=="true"){
+				document.getElementById('signin_div').style.display='none';
+				document.getElementById('logout_div').style.display='inline';
+			}
+			else{
+				document.getElementById('signin_div').style.display='inline';
+				document.getElementById('logout_div').style.display='none';	
+			}
+		</script>
 		<div id = 'index_bng'>
 			<h1>Welcome to National Park Finder!</h1>
 			<div id = 'search'>

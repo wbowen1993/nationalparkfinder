@@ -1,0 +1,21 @@
+body{
+	margin: 0;
+}
+h1{
+	font-family: 'Palanquin Dark', sans-serif;
+	font-size: 24px;
+}
+#wrapper{
+	position: relative;
+	top:90px;
+	width: 90%;
+	margin: auto;
+	padding:30px;
+}
+#user_info{
+	padding:20px;
+	background-color: #d8f0f3;
+	width:35%;
+	height:200px;
+	border-radius: 5px;
+}

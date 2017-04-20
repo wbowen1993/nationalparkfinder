@@ -102,6 +102,10 @@ function activity_pop(park_name,park_activities_code_array,activities_code,callb
 
 router.get('/search_index',function(req,res,next)
 {
+    var session = "false";
+    if(req.session&&req.session.user){
+      session = "true";
+    }
     // Input
     var queryData = url.parse(req.url, true).query;
     var state_q = decodeURI(queryData["state"]);
@@ -119,13 +123,17 @@ router.get('/search_index',function(req,res,next)
                 park_activities_code_array.length = 0;
                 console.log(park_name.length);
                 if(park_name.length==0)
-                    res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,image_url:image_url});
+                    res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,
+                        park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,
+                        image_url:image_url,session:session});
                 else{
                     for(var i=0;i<park_name.length;i++){
                         var activities_code = [];
                         activity_pop(park_name[i],park_activities_code_array,activities_code,function(){
                             if(park_name.length==park_activities_code_array.length)
-                                res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,image_url:image_url});
+                                res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,
+                                    park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,
+                                    image_url:image_url,session:session});
                         });
                     }  
                 }

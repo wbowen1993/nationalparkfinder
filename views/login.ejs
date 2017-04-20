@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>Log in</title>
+		<link rel="stylesheet" type="text/css" href="../css/login.css">
+		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+	</head>
+	<body>
+	    <% include ../views/layout %>
+		<div id="form">
+			<div id="signin_div">
+				<h1 id="signin_banner">Welcome Back!</h1>
+				<% if(msg!=""){%>
+					<p id="error"><img src="../img/error.png" style="width:24px;height:24px;position: relative;
+					    top: 6px;left: -10px;"><%= msg%></p>
+				<%}%>
+				<form class="form" action="/login" method="POST" id="signin">
+					<input type="text" name="email" placeholder="Email Address" class="email">
+					<input type="password" name="password" placeholder="Password" class="password">
+					<input type="submit" value="SIGN IN">
+				</form>
+				<button id='signup'><a href="/signup">SIGN UP</a></button>
+			</div>
+		</div>
+	</body>
+</html>
