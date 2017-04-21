@@ -5,7 +5,9 @@
 		<!-- font -->
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
 		<link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 		<link rel="stylesheet" type="text/css" href="../css/park.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
@@ -79,12 +81,30 @@
 				document.getElementById('desc').style.display = "none";
 				document.getElementById('dire_info').style.display = "inline-block";
 			}
+			function fav_submit(){
+				document.getElementById('rating_form').action=window.location.href;
+			}
 			</script>
 		<button id="left" style="float: left;" onclick="prevImg()" class="page">&#10094;</button>
 		<button id="right" style="float: right;" onclick="nextImg()" class="page">&#10095;</button>
+		<% if(session=="true"){%>
+		<form method="post" id="rating_form">
+			<% if(faved=="false"){%>
+			<button id="fav_unchecked" class="fav_btn" onclick="fav_submit()">
+				<img src="../img/fav.png" style="width:32px;height: 32px">
+				<p>+Add</p>
+			</button>
+			<%}else{%>
+			<button id="fav_checked" class="fav_btn" onclick="fav_submit()">
+				<img src="../img/fav.png" style="width:32px;height: 32px">
+				<p>Remove</p>
+			</button>
+			<%}%>
+		</form>
+		<%}%>
 		</div>
-		<div class="container" style="margin-bottom: 100px">
-			<% if(park_alert_t.length>0||park_caution_t.length>0){%>
+		<% if(park_alert_t.length>0||park_caution_t.length>0){%>
+		<div class="container" style="margin-top: 100px">
 			<h2>Alert</h2>
 			<hr/>
 			<table class="alert_table">
@@ -107,9 +127,9 @@
 				</tr>
 				<%}%>
 			</table>
-			<%}%>
 		</div>
-		<div class="container" style="margin-bottom: 100px">
+		<%}%>
+		<div class="container" style="margin-bottom: 100px;margin-top: 100px">
 			<h2>Basic Information</h2>
 			<hr/>
 			<div style="padding-top: 10px;padding-bottom: 15px">

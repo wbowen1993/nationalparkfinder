@@ -23,6 +23,18 @@
 				<h1>Last name:    <%= lastname%></h1>
 				<h1>First name:    <%= firstname%></h1>
 			</div>
+			<div id="fav_list">
+				<h1>Your favorite park list</h1>
+				<ul>
+				<% for(var i = 0;i<park_name.length;i++){%>
+					<form action="/profile" method="post">
+						<label><a href="/park/<%= park_name[i]%>"><%= park_name[i]%></a></label>
+						<input type="hidden" name="park_name" value="<%= park_name[i]%>">
+						<input type="submit" value="Delete">
+					</form>
+				<%}%>
+				</ul>
+			</div>
 		</div>
 	</body>
 </html>

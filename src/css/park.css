@@ -130,6 +130,18 @@ strong{
 .tweet_text p{
 	font-size: 12px;
 }
+.fav_btn{
+    border-radius: 30px;
+    margin: auto;
+    padding: 10px;
+    border: none;
+    display: block;
+    width: 100px;
+    height:52px;
+}
+.fav_btn:focus{
+	outline: 0;
+}
 #bg{
 	height:750px;
 	width:100%;
@@ -169,4 +181,43 @@ strong{
 	height: 100%;
 	width:25%;
 	padding: 5px;
+}
+#rating_form{
+    position: relative;
+    top: 440px;
+}
+#fav_unchecked:hover{
+	background-color: #0D3752;
+	transition: 1s;
+}
+#fav_unchecked p{
+	font-size: 16px;
+	display: none;
+	font-family: 'Palanquin Dark', sans-serif;
+	color:white!important;
+}
+#fav_unchecked:hover img{
+	display: none;
+}
+#fav_unchecked:hover p{
+	display: inline;
+}
+#fav_checked{
+	background-color: #0D3752;
+}
+#fav_checked:hover{
+	background-color: #cccccc;
+	transition: 1s;
+}
+#fav_checked p{
+	font-size: 16px;
+	display: none;
+	font-family: 'Palanquin Dark', sans-serif;
+	color:#0D3752!important;
+}
+#fav_checked:hover img{
+	display: none;
+}
+#fav_checked:hover p{
+	display: inline;
 }
