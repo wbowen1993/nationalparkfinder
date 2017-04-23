@@ -81,17 +81,16 @@ function state_stat(park_names,state,callback){
 
 router.get('/login',function(req,res,next){
 	// mongoose.connection.close();
-	res.render('login',{msg:""});
+	res.render('login',{msg:"",profile_img:""});
 });
 
 router.get('/signup',function(req,res,next){
-	// mongoose.connection.close();
-	res.render('signup',{msg:""});
+	// mongoose.connect
+	res.render('signup',{msg:"",profile_img:profile_img:""});
 });
 
 router.get('/profile',function(req,res,next){
 	if(req.session&&req.session.user){
-		console.log("I am here-----1");
 		User.findOne({email:req.session.user.email},function(err,user){
 			if(!user){
 				req.session.reset();
@@ -102,11 +101,9 @@ router.get('/profile',function(req,res,next){
 				res.locals.user = user;
 				User_fav.findOne({email:req.session.user.email},function(err,user_fav){
 					if(!user_fav){
-						console.log("I am here------2");
 						var park_name = [];
 						User_rating.find({email:req.session.user.email},function(err,user_ratings){
 							if(user_ratings.length==0){
-								console.log("I am here--------3");
 								var user_ratings = [];
 								var state_set = [];
 								res.render('profile',{email:user.email,lastname:user.last_name,firstname:user.first_name,profile_img:user.profile_img,session:"true",

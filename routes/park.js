@@ -35,6 +35,7 @@ var lat = [];
 var lon = [];
 var description = [];
 var directions_info = [];
+var profile_img = "";
 
 // Connect string to MySQL
 var connection = mysql.createConnection({
@@ -221,7 +222,6 @@ router.get('/park/:park_name',function(req,res,next){
 	var session = "false";
     var faved = "false";    
     var rated = "false";
-    var profile_img = "";
     var scene = -1;
     var act = -1;
     var exp = -1;
