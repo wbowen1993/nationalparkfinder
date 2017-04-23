@@ -1,7 +1,7 @@
 <html>
 	<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../css/compare.css">
-	<script>
+	<script>  
 		function sort(){
 			// console.log(window.location.href+"&method="+document.getElementById('select').value);
 			var origin_url = window.location.href;
@@ -27,30 +27,54 @@
 		<div class="wrapper">
 			<h1>Park Comparison</h1>
 			<div id = "form">
-				<!-- <form method="get" id="form"> -->
-					<select name="method" id="select">
-						<option value="A">Alphabetical(A-Z)</option>
-						<option value="T_D">Average Temperature(High-Low)</option>
-						<option value="T_A">Average Temperature(Low-High)</option>
-						<option value="R_N">#Restaurant</option>
-						<option value="R_R">Average Rating of Restaurant</option>
-					</select>
-					<!-- <input type="submit" value="submit" id="submit" onclick="sort()"> -->
-					<button onclick="sort()" id="sort_btn">Sort</button>
-				</form>
-			</div>
+				<select name="method" id="select">
+					<option value="A" id="option-1">Alphabetical(A-Z)</option>
+					<option value="T_H" id="option-2">Highest Temperature(High-Low)</option>
+					<option value="T_L" id="option-3">Lowest Temperature(Low-High)</option>
+					<option value="R_N" id="option-4">#Restaurant</option>
+					<option value="R_R" id="option-5">Average Rating of Restaurant</option>
+					<option value="A_N" id="option-6">#Activities</option>
+				</select>
+				<button onclick="sort()" id="sort_btn">Sort</button>
+			\</div>
 			<div id = "table">
 				<table id="result_table" class="table table-condensed" style="margin-bottom: 50px">
-					<% for(var i = 0;i<parks.length;i++){%>
+				<colgroup span="3"></colgroup><col><col><col><col><col>
+					<tr>
+						<th colspan="3" scope="rowgroup">Name</th>
+						<th scope="col">Max.Temperture</th><th scope="col">Min.Temperature</th>
+						<th scope="col">#Restaurant</th><th scope="col">Restaurant Rating</th>
+						<th scope="col">#Activities</th>
+					</tr>
+					<% for(var i = 0;i<park_set.length;i++){%>
 					<tr>
 						<td class="td_tag"><%= i+1%></td>
-						<td class='td_img'><img src="<%= img_url[i]%>" class="park_icon"></td>
-						<td><%= names[i]%></td>
-						<td><%= r_num[i]%></td>
+						<td class='td_img'><img src="<%= park_set[i].img_url%>" class="park_icon"></td>
+						<td><%= park_set[i].name%></td>
+						<td><%= park_set[i].h_t%>°F</td>
+						<td><%= park_set[i].l_t%>°F</td>
+						<td><%= park_set[i].r_num%></td>
+						<td><%= park_set[i].rating%></td>
+						<td><%= park_set[i].a_num%></td>
 					</tr>
 					<%}%>
 				</table>
 			</div>
 		</div>
+		<script type="text/javascript">
+			var method = <%- JSON.stringify(method)%>;
+			if(method=='T_H')
+				document.getElementById('option-2').selected='true';
+			else if(method=='T_L')
+				document.getElementById('option-3').selected='true';
+			else if(method=='R_N')
+				document.getElementById('option-4').selected='true';
+			else if(method=='R_R')
+				document.getElementById('option-5').selected='true';
+			else if(method=='A_N')
+				document.getElementById('option-6').selected='true';
+			else
+				document.getElementById('option-1').selected='true';
+		</script>
 	</body>
 </html>

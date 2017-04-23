@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var url = require('url');
-
+var User = require('../model/user');
 
 var park_name = [];
 var latitude = [];
@@ -103,8 +103,15 @@ function activity_pop(park_name,park_activities_code_array,activities_code,callb
 router.get('/search_index',function(req,res,next)
 {
     var session = "false";
+    var profile_img = "";
     if(req.session&&req.session.user){
-      session = "true";
+        session = "true";
+        User.findOne({email:req.session.user.email},function(err,user){
+            if(!user);
+            else{
+                profile_img = user.profile_img;
+            }
+        });
     }
     // Input
     var queryData = url.parse(req.url, true).query;
@@ -133,7 +140,7 @@ router.get('/search_index',function(req,res,next)
                             if(park_name.length==park_activities_code_array.length)
                                 res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,
                                     park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,
-                                    image_url:image_url,session:session});
+                                    image_url:image_url,session:session,profile_img:profile_img});
                         });
                     }  
                 }

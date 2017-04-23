@@ -7,11 +7,19 @@
 		<link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
 		<link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
-
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 		<link rel="stylesheet" type="text/css" href="../css/park.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<script src="../js/jquery-3.1.1.min.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script>
+			$( function() {
+				$( "#datepicker" ).datepicker();
+			} );
+		</script>
 	</head>
 	<body>
 		<% include ../views/layout %>
@@ -28,13 +36,7 @@
 		</script>
 		<div id="bg" style="background: url(<%= bgImg[0]%>) no-repeat center center;
 				background-size: cover;">
-		<h1 style="font-size: 70px;font-family: 'Bungee Shade', cursive;
-		text-align: center;
-		top:320px;
-		position:absolute;
-		color:white!important;
-		width:100%;
-		text-shadow: 3px 3px #000000;"><%= key_words%></h1>
+		<h1><%= key_words%></h1>
 		<script type="text/javascript">
 			var index = 0;
 			prevImg();
@@ -82,26 +84,108 @@
 				document.getElementById('dire_info').style.display = "inline-block";
 			}
 			function fav_submit(){
-				document.getElementById('rating_form').action=window.location.href;
+				document.getElementById('fav_form').action=window.location.href;
+			}
+			function rating_submit(){
+				document.getElementById('rating_dialog').style.display="block";
+			}
+			function dialog_cancel(){
+				document.getElementById('rating_dialog').style.display='none';
+			}
+			function validateForm(){
+				var days = document.forms['rating_form']['days'].value;
+				var date = document.forms['rating_form']['date'].value;
+				if(days.length==0||date.length==0||!days.isInteger()||days<1){
+					alert("!!!");
+					return false;
+				}
+				else{
+					return true;
+				}
 			}
 			</script>
 		<button id="left" style="float: left;" onclick="prevImg()" class="page">&#10094;</button>
 		<button id="right" style="float: right;" onclick="nextImg()" class="page">&#10095;</button>
 		<% if(session=="true"){%>
-		<form method="post" id="rating_form">
-			<% if(faved=="false"){%>
-			<button id="fav_unchecked" class="fav_btn" onclick="fav_submit()">
-				<img src="../img/fav.png" style="width:32px;height: 32px">
-				<p>+Add</p>
-			</button>
-			<%}else{%>
-			<button id="fav_checked" class="fav_btn" onclick="fav_submit()">
-				<img src="../img/fav.png" style="width:32px;height: 32px">
-				<p>Remove</p>
-			</button>
-			<%}%>
-		</form>
+			<div id="rating_btn">
+				<% if(rated=="false"){%>				
+				<button id="rating_unchecked" class="fav_btn" onclick="rating_submit()">
+					<img src="../img/foot_print.png" style="width:32px;height: 32px">
+					<p>+Been</p>
+				</button>
+				<%}else{%>
+				<button id="rating_checked" class="fav_btn" onclick="rating_submit()">
+					<img src="../img/foot_print.png" style="width:32px;height: 32px">
+					<p>Modify</p>
+				</button>
+				<%}%>
+			</div>
+			<form method="post" id="fav_form">
+				<% if(faved=="false"){%>
+				<input type="hidden" value="fav" name="operation">
+				<button id="fav_unchecked" class="fav_btn" onclick="fav_submit()">
+					<img src="../img/fav.png" style="width:32px;height: 32px">
+					<p>+Add</p>
+				</button>
+				<%}else{%>
+				<input type="hidden" value="fav" name="operation">
+				<button id="fav_checked" class="fav_btn" onclick="fav_submit()">
+					<img src="../img/fav.png" style="width:32px;height: 32px">
+					<p>Remove</p>
+				</button>
+				<%}%>
+			</form>
+			<div id="user_rating">
+				<% if(scene!=-1&&act!=-1&&exp!=-1){%>
+					<% var avg = ((scene+act+exp)/3).toPrecision(2)%>
+					<h1>Your Rating: <%= avg%></h1>
+				<%}%>
+				<div id="tags">
+				<% if(tags.length>0){%>
+					<% for(var i=0;i<tags.length;i++){%>
+						<h6><%=tags[i]%></h6>
+				<%}}%>
+				</div>
+			</div>
 		<%}%>
+		</div>
+		<div id="rating_dialog">
+			<h4>Rating</h4>
+				<form method="post" name="rating_form" onsubmit="return validateForm()">
+					<span class="rating_img" id="first_span">
+						<p>Scene rating:</p>
+						<span class="stars">
+						<% for(var i = 5;i>=1;i--){%>
+							<input class="star star-<%= i%>" id="scene-<%= i%>" type="radio" name="scene" value="<%= i%>"/>
+							<label class="star star-<%= i%>" for="scene-<%= i%>"></label>
+						<%}%>
+						</span>
+					</span>
+					<span class="rating_img">
+						<p>Activities rating:</p>
+						<span class="stars">
+						<% for(var i = 5;i>=1;i--){%>
+							<input class="star star-<%= i%>" id="act-<%= i%>" type="radio" name="act" value="<%= i%>"/>
+							<label class="star star-<%= i%>" for="act-<%= i%>"></label>
+						<%}%>
+						</span>
+					</span>
+					<span class="rating_img">
+						<p>Experience rating:</p>
+						<span class="stars">
+						<% for(var i = 5;i>=1;i--){%>
+							<input class="star star-<%= i%>" id="exp-<%= i%>" type="radio" name="exp" value="<%= i%>"/>
+							<label class="star star-<%= i%>" for="exp-<%= i%>"></label>
+						<%}%>
+						</span>
+					</span>
+					<p style="padding-left: 40px;">Date:<input type="text" id="datepicker" name="date"></p>
+					<p>Days:<input type="text" id="days" name="days"></p>
+					<p style="margin-left: 20px">Tags:(seperate by ':')</p>
+					<input type="text" name="tag" id="tag_box" style="margin-left: 40px">
+					<input type="submit" value="Submit">
+					<button id="cancel_btn" onclick="dialog_cancel()">Cancel</button>
+				</form>
 		</div>
 		<% if(park_alert_t.length>0||park_caution_t.length>0){%>
 		<div class="container" style="margin-top: 100px">
@@ -121,7 +205,7 @@
 				<tr>
 					<td><img src="../img/caution.png" class="alert_icon"></td>
 					<td>
-						<h4><b><%= park_caution_t[i]%></b></h4>
+						<h4 style="border-radius: 5px"><b><%= park_caution_t[i]%></b></h4>
 						<h5><%= park_caution_d[i]%></h5>
 					</td>
 				</tr>
@@ -148,7 +232,7 @@
 				<col>
 				<col>
 				<tr>
-					<th colspan="2" scope="rowgroup"">Date</th>
+					<th colspan="2" scope="rowgroup">Date</th>
 					<th scope="col">Description</th>
 					<th scope="col">Temperature</th>
 					<th scope="col">Humidity</th>
@@ -426,6 +510,29 @@
 					google.maps.event.addListenerOnce(map, 'idle', function() {
 				        map.fitBounds(bounds);
 					});
+				}
+				var scene = <%- JSON.stringify(scene)%>;
+				if(scene!=-1){
+					var str = "scene-"+scene;
+					document.getElementById(str).checked=true;
+				}
+				var act = <%- JSON.stringify(act)%>;
+				if(act!=-1){
+					var str = "act-"+act;
+					document.getElementById(str).checked=true;
+				}
+				var exp = <%- JSON.stringify(exp)%>;
+				if(exp!=-1){
+					var str = "exp-"+exp;
+					document.getElementById(str).checked=true;
+				}
+				var date = <%- JSON.stringify(date)%>;
+				if(date!=""){
+					document.getElementById('datepicker').placeholder=date;
+				}
+				var days = <%- JSON.stringify(days)%>;
+				if(days!=""){
+					document.getElementById('days').placeholder=days;
 				}
 				</script>
 				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDikfTOXeaw7tQ65UFLmB-_eqV_AfqCAO4&callback=initMap&language=en"

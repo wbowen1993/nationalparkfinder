@@ -6,6 +6,15 @@ p{
 	font-family:'Slabo 27px', serif;
 	color: #0D3752;
 }
+h1{
+	font-size: 70px;
+	font-family: 'Palanquin Dark', sans-serif;
+	text-align: center;
+	top:320px;
+	position:absolute;
+	color:white!important;
+	width:100%;
+}
 h2{
 	margin-top: 50px;
 	margin-bottom: 15px;
@@ -21,6 +30,29 @@ h3{
 	color: #0D3752;
 	margin-top:0;
 	margin-bottom: 20px;
+}
+h4{
+	margin: 0;
+    font-size: 18px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #004d80;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-family: 'Palanquin Dark', sans-serif;
+}
+h6{
+	display: inline;
+	background: rgba(153,255,153,0.9);
+    border-radius: 30px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 16px;
+    border: none;
+    font-family: 'Palanquin Dark', sans-serif;
 }
 hr{
 	 height:5px;
@@ -60,6 +92,9 @@ tr{
 }
 strong{
 	color:black!important;
+}
+span p{
+	width:210px;
 }
 .container{
 	width: 75%
@@ -142,6 +177,14 @@ strong{
 .fav_btn:focus{
 	outline: 0;
 }
+.rating_img{
+    padding-left: 20px;
+    display: block;
+    position: relative;
+}
+.stars{
+	position: relative;
+}
 #bg{
 	height:750px;
 	width:100%;
@@ -182,7 +225,15 @@ strong{
 	width:25%;
 	padding: 5px;
 }
-#rating_form{
+#fav_form{
+	float:left;
+	left:46%;
+    position: relative;
+    top: 440px;
+}
+#rating_btn{
+	float:left;
+	left:38%;
     position: relative;
     top: 440px;
 }
@@ -220,4 +271,167 @@ strong{
 }
 #fav_checked:hover p{
 	display: inline;
+}
+#rating_unchecked:hover{
+	background-color: #ffff99;
+	transition: 1s;
+}
+#rating_unchecked p{
+	font-size: 16px;
+	display: none;
+	font-family: 'Palanquin Dark', sans-serif;
+	color:white!important;
+}
+#rating_unchecked:hover img{
+	display: none;
+}
+#rating_unchecked:hover p{
+	display: inline;
+}
+#rating_checked{
+	background-color: #ffff99;
+}
+#rating_checked:hover{
+	background-color: #cccccc;
+	transition: 1s;
+}
+#rating_checked p{
+	font-size: 16px;
+	display: none;
+	font-family: 'Palanquin Dark', sans-serif;
+	color:#0D3752!important;
+}
+#rating_checked:hover img{
+	display: none;
+}
+#rating_checked:hover p{
+	display: inline;
+}
+#rating_dialog{
+    border-radius: 5px;
+    z-index: 200;
+    width: 420px;
+    height: 360px;
+    background-color: white;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
+    display: none; 
+    position: fixed;
+    top: 500px;
+    left: 40%;
+    background: rgba(255,255,255,0.8);
+}
+#rating_dialog p{
+	font-size: 16px;
+	padding-left: 20px;
+	padding-bottom: 0;
+	display: inline-block;
+}
+#first_span{
+	padding-top: 20px;
+}
+#rating_dialog input[type=text]{
+	padding-left:4px;
+    margin-left: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    height: 30px;
+}
+#rating_dialog input[type=submit]{
+    width: 100%;
+    bottom: 40px;
+    position: absolute;
+    left: 0;
+    height: 40px;
+    border: 0;
+    background: #00e6ac;
+    font-size: 16px;
+    color: white;
+    font-family: 'Palanquin Dark', sans-serif;
+}
+#cancel_btn{
+	position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    background: #ff5050;
+    border: none;
+    height: 40px;
+    color: white!important;
+    font-size: 16px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-family: 'Palanquin Dark', sans-serif;
+}
+#datepicker{
+	width:110px;
+}
+#ui-datepicker-div{
+	font-size: 16px;
+	text-align: center;
+}
+#days{
+	width: 100px;
+    position: relative;
+}
+#tag_box{
+	width: 320px;
+}
+#user_rating{
+	top:160px;
+	position: relative;
+}
+#user_rating h1{
+	font-family: 'Palanquin Dark', sans-serif;
+	font-size: 40px;
+}
+#tags{
+	text-align: center;
+	margin:auto;
+	top:400px;
+	position: relative;
+}
+.ui-datepicker-calendar tr{
+	font-size: 12px;
+	height:0;
+}
+.ui-datepicker td {
+    height: 0;
+    border: 0;
+}
+div.stars {
+  width: 270px;
+  display: inline-block;
+}
+
+input.star { display: none; }
+
+label.star {
+	float: right;
+    right: 15%;
+    position: relative;
+	padding-top: 5px;
+	padding-left: 5px;
+	font-size: 16px;
+	color: #444;
+	transition: all .2s;
+}
+
+input.star:checked ~ label.star:before {
+  content: '\f005';
+  color: #FD4;
+  transition: all .25s;
+}
+
+input.star-5:checked ~ label.star:before {
+  color: #FE7;
+  text-shadow: 0 0 20px #952;
+}
+
+input.star-1:checked ~ label.star:before { color: #F62; }
+
+label.star:hover { transform: scale(1.3); }
+
+label.star:before {
+  content: '\f006';
+  font-family: FontAwesome;
 }

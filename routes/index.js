@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 var MongoClient = require('mongodb').MongoClient;
-
+var mongoose = require('mongoose');
 var states = [];
 var my_activities = [];
 var activities = [];
 
-
+var User = require('../model/user');
 // Connect string to MySQL
 var connection = mysql.createConnection({
   host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
@@ -64,13 +64,20 @@ function statesQuery(state,callback){
 
 router.get('/',function(req,res,next){
     var session = "false";
+    var profile_img = "";
     if(req.session&&req.session.user){
       session = "true";
+      User.findOne({email:req.session.user.email},function(err,user){
+        if(!user);
+        else{
+          profile_img = user.profile_img;
+        }
+      });
     }
     userActivitiesQuery(my_activities,function(){
         // console.log(states.length);
         statesQuery(states,function(){
-            res.render('index',{states: states,activities:activities, my_activities:my_activities,session:session});
+            res.render('index',{states: states,activities:activities, my_activities:my_activities,session:session,profile_img:profile_img});
         });
     });
 });

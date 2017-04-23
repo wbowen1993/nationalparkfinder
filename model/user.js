@@ -9,6 +9,7 @@ var User = mongoose.Schema({
 	last_name: String,
 	email:{type:String, unique:true},
 	password:String,
+	profile_img:String
 });
 
 module.exports = mongoose.model('User', User);

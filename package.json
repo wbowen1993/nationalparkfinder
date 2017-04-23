@@ -22,6 +22,7 @@
     "mongodb": "*",
     "mongojs": "^2.4.0",
     "mongoose": "^4.9.5",
+    "multer": "^1.3.0",
     "node-flickr": "^1.0.0",
     "node-yelp": "0.0.3",
     "openweathermap": "^1.0.0",

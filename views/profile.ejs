@@ -3,6 +3,7 @@
 		<title>Dashboard</title>
 		<link rel="stylesheet" type="text/css" href="../css/profile.css">
 		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	</head>
 	<body>
 	    <% include ../views/layout %>
@@ -17,24 +18,176 @@
 				document.getElementById('logout_div').style.display='none';	
 			}
 		</script>
-	    <div id="wrapper">
-		    <div id="user_info">
-		    	<h1>Email:    <%= email%></h1>
-				<h1>Last name:    <%= lastname%></h1>
-				<h1>First name:    <%= firstname%></h1>
+		<div id="bio">
+			<div id="info">
+				<form action="/profile/upload" method="post" enctype="multipart/form-data">
+					<div class="avatar-zone" id="avatar-zone">
+					</div>   
+					<input type="file" name="photo" class="upload_btn"/>
+					<div class="overlay-layer">
+						<button onclick="return false">+</button>
+					</div>
+					<input type="submit" value="upload">
+				</form>
+				<p>Email:&nbsp;<%= email%></p>
+				<p>Name:&nbsp;<%= firstname%>&nbsp;<%= lastname%></p>
 			</div>
-			<div id="fav_list">
-				<h1>Your favorite park list</h1>
-				<ul>
-				<% for(var i = 0;i<park_name.length;i++){%>
-					<form action="/profile" method="post">
-						<label><a href="/park/<%= park_name[i]%>"><%= park_name[i]%></a></label>
-						<input type="hidden" name="park_name" value="<%= park_name[i]%>">
-						<input type="submit" value="Delete">
-					</form>
-				<%}%>
-				</ul>
+			<div id="control">
+				<button id="fav_btn" onclick="mode_switch(0)">Favorite Parks</button>
+				<button id="rate_btn" onclick="mode_switch(1)">Your Footage</button>
+				<h3>Your Footage:&nbsp;<%= user_ratings.length%>/58</h3>
+				<div id="donutchart1" style="width: 320px; height: 160px;"></div>
+				<h3>State Visited:&nbsp;<%= state_set.length%>/27</h3>
+				<div id="donutchart2" style="width: 320px; height: 160px;"></div>
 			</div>
 		</div>
+	    <div id="wrapper">
+		    <div id="fav_list" class="module">
+				<h1>YOUR FAV PARKLIST</h1>
+				<hr>
+				<table class="list"><colgroup span="2"></colgroup><colgroup span="2"></colgroup><col><col><col>
+					<tr>
+						<th colspan="2" scope="rowgroup">Park Name</th>
+						<th colspan="2" scope="rowgroup">Weather</th>
+						<th scope="col">Temperature</th>
+						<th scope="col">Sunrise</th>
+						<th scope="col">Sunset</th>
+					</tr>
+					<% for(var i = 0;i<park_name.length;i++){%>
+					<tr>
+						<td><img src="<%= weather_set[i].img%>" class="dash_img"></td>
+						<td><a href="/park/<%= park_name[i]%>"><%= park_name[i]%></a></td>
+						<td><img src="<%= weather_set[i].code%>"></td>
+						<td><%= weather_set[i].description%></td>
+						<td><%= weather_set[i].low_temperature%>°F~<%= weather_set[i].high_temperature%>°F</td>
+						<td><%= weather_set[i].sunrise%></td>
+						<td><%= weather_set[i].sunset%></td>
+						<td>
+						<form action="/profile" method="post">
+							<input type="hidden" name="type" value="fav">
+							<input type="hidden" name="park_name" value="<%= park_name[i]%>">
+							<input type="submit" value="Delete">
+						</form>
+						</td>
+					</tr>
+					<%}%>
+				</table>
+			</div>
+			<div id="rated_list" class="module">
+				<h1>YOUR RATED PARK LIST</h1>
+				<hr>
+				<table class="list"><colgroup span="2"></colgroup><col><col><col>
+					<tr>
+						<th colspan="2" scope="rowgroup">Park Name</th>
+						<th scope="col">Date</th>
+						<th scope="col">Days</th>
+						<th scope="col">Rating</th>
+						<th scope="col">Tags</th>
+					</tr>
+				<% for(var i = 0;i<user_ratings.length;i++){%>
+					<tr>
+					<td><img src="<%= img_set[i]%>" class="dash_img"></td>
+					<td><a href="/park/<%= user_ratings[i].park_name%>"><%= user_ratings[i].park_name%></a></td>
+					<td><%= user_ratings[i].date%></td>
+					<td><%= user_ratings[i].days%></td>
+					<td><%= ((user_ratings[i].scene_rating+user_ratings[i].act_rating+user_ratings[i].exp_rating)/3).toPrecision(2)%></td>
+					<td>
+					<% for(var j= 0;j<user_ratings[i].tag.length;j++){%>
+						<p><%= user_ratings[i].tag[j]%></p>
+					<%}%>
+					</td>
+					<td>
+					<form action="/profile" method="post">
+						<input type="hidden" name="type" value="rating">
+						<input type="hidden" name="park_name" value="<%= user_ratings[i].park_name%>">
+						<input type="submit" value="Delete">
+					</form>
+					</td>
+					</tr>
+				<%}%>
+				</table>
+			</div>
+		</div>
+		<script>
+			var profile_img = <%-JSON.stringify(profile_img)%>;
+			var new_str = "";
+			if(profile_img.length>5){				
+				for(var i = 0;i<profile_img.length;i++){
+					if(profile_img[i]=='\\')
+						new_str+="/";
+					else
+						new_str+=profile_img[i];
+				}
+				new_str = new_str.substring(3);
+				new_str = ".."+new_str;
+				document.getElementById('nav-icon').src = new_str;
+				new_str = "url("+new_str+")";
+				document.getElementById('avatar-zone').style.backgroundImage = new_str;
+			}
+			function mode_switch(mode){
+				if(mode==0){
+					document.getElementById('fav_btn').style.backgroundColor = '#e9f4fc';
+					document.getElementById('fav_btn').style.color = '#0d3752';
+					document.getElementById('rate_btn').style.backgroundColor = '#0d3752';
+					document.getElementById('rate_btn').style.color = '#e9f4fc';
+					document.getElementById('fav_list').style.display = 'block';
+					document.getElementById('rated_list').style.display = 'none';
+				}
+				else{
+					document.getElementById('rate_btn').style.backgroundColor = '#e9f4fc';
+					document.getElementById('rate_btn').style.color = '#0d3752';
+					document.getElementById('fav_btn').style.backgroundColor = '#0d3752';
+					document.getElementById('fav_btn').style.color = '#e9f4fc';
+					document.getElementById('fav_list').style.display = 'none';
+					document.getElementById('rated_list').style.display = 'block';
+				}
+			}
+		</script>
+		<script type="text/javascript">
+			google.charts.load("current", {packages:["corechart"]});
+			google.charts.setOnLoadCallback(drawChart);
+			var num = <%-JSON.stringify(user_ratings)%>;
+			num = num.length;
+			var state = <%- JSON.stringify(state_set)%>;
+			function drawChart() {
+				var data1 = google.visualization.arrayToDataTable([
+					['Type', 'Number'],
+					['Unexplored', 58-num],
+					['Been',      num]
+				]);
+				var options1 = {
+					chartArea:{top:0,height:'100%'},
+					backgroundColor: {stroke: "#0d3752", strokeWidth: 0, fill: "#0d3752"},
+					legend: 'none',
+					titlePosition: 'none',
+					pieSliceBorderColor : "#0d3752",
+					titleTextStyle:{color:'white'},
+					pieHole: 0.4,
+				};
+
+				var arr = [];
+				arr.push(['State','Number']);
+				for(var i = 0;i<state.length;i++){
+					var new_arr = [];
+					new_arr.push(state[i].name);
+					new_arr.push(state[i].num);
+					arr.push(new_arr);
+				}
+				var data2 = google.visualization.arrayToDataTable(arr);
+				var options2 = {
+					chartArea:{top:0,height:'100%'},
+					backgroundColor: {stroke: "#0d3752", strokeWidth: 0, fill: "#0d3752"},
+					pieSliceBorderColor : "#0d3752",
+					legend:'none',
+					titlePosition: 'none',
+					titleTextStyle:{color:'white'},
+					pieHole: 0.4,
+				};
+				var chart1 = new google.visualization.PieChart(document.getElementById('donutchart1'));
+				var chart2 = new google.visualization.PieChart(document.getElementById('donutchart2'));
+				chart1.draw(data1, options1);
+				chart2.draw(data2, options2);
+			}
+	    </script>
 	</body>
 </html>

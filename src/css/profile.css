@@ -1,50 +1,86 @@
 body{
 	margin: 0;
-	background-color: #f2f2f2;
+	background-color: #e9f4fc;
+	font-family: 'Palanquin Dark', sans-serif;
 }
 h1{
-	font-family: 'Palanquin Dark', sans-serif;
+	font-size: 24px;
+	text-align: center;
+	color:#666;
+}
+h3{
+	text-align: center;
+    color: white;
+    font-size: 16px;
+}
+button:focus{
+	outline: none;
+}
+hr{
+	color:#bbb;
+}
+td p{
+	display: inline;
+	float: left;
+	background: #66ccff;
+	color: white;
+	padding: 5px;
+	font-size: 18px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.module{
+	padding:20px;
+	border-radius: 5px;
+	box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);
+}
+.list{
+    border-spacing: 10px;
+    width: 100%;
+    color:#666;
+}
+.list th{
 	font-size: 24px;
 }
+.list td{
+	font-size:24px;
+	text-align: center;
+}
 #wrapper{
-	position: relative;
-	top:90px;
-	width: 90%;
-	margin: auto;
-	padding:30px;
+	float: left;
+    margin-right: 20px;
+    left: 340px;
+    position: relative;
+    top: 90px;
+    width: calc(100% - 400px);
+    margin: auto;
+    padding: 30px;
 }
 #user_info{
-	padding:20px;
-	background-color: white;
 	width:35%;
 	height:200px;
-	border-radius: 5px;
-	box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);;
 }
 #fav_list{
 	position: relative;
 	top:20px;
-	background-color: white;
-	width:35%;
-	padding: 20px;
-	border-radius: 5px;
-	box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);;
 }
-#fav_list ul{
-	padding: 10px;
+#rated_list{
+	position: relative;
+	top:20px;
+	display: none;
 }
-#fav_list a{
-    font-size: 20px;
-    font-family: 'Palanquin Dark', sans-serif;
+.module a{
+    font-size: 24px;
+    /*font-family: 'Palanquin Dark', sans-serif;*/
     color: #158415!important;
     text-decoration: none;
-    border: 1px solid #1fc71f;
     border-radius: 5px;
     padding-left: 20px;
     padding-right: 20px;
-    background: #a7f1a7;
 }
-#fav_list input[type=submit]{
+.module input[type=submit]{
     float: right;
     height: 38px;
     border: none;
@@ -55,6 +91,112 @@ h1{
     background: #ff8080;
     color: white!important;
     cursor:pointer;
+}
+#bio{
+    display: inline;
+    height: 100%;
+    width: 320px;
+    background: #ccffdd;
+    overflow: hidden;
+}
+#info{
+	height: 290px;
+    width: 320px;
+    background: #eee;
+    top: 90px;
+    position: fixed;
+    text-align: center;
+    z-index: 10;
+    box-shadow: -5px 2px 5px #888888;
+}
+#info p{
+	font-size: 16px;
+	margin: 3px;
+	/*font-family: 'Palanquin Dark', sans-serif;*/
+	color: #0d3752;
+}
+#info form{
+	margin-bottom: 0;
+}
+#info input[type=submit]{
+    display: block;
+    height: 20px;
+    width: 100px;
+    margin-top: 56px;
+    color: white;
+    left: 34%;
+    background: #0d3752;
+    border: none;
+    border-radius: 3px;
+    position: relative;
+}
+#control{
+    top: 380px;
+    display: inline;
+    height: calc(100% - 380px);
+    width: 320px;
+    background: #0d3752;
+    position: fixed;
+}
+#control button{
+	width:100%;
+	height:60px;
+	border:none;
+    font-size: 24px;
+    text-align: center;
+    font-family: 'Palanquin Dark', sans-serif;
+}
+#fav_btn{
+	background-color: #e9f4fc;
+	color:#0d3752;
+	border-bottom: 1px solid white;
+    box-shadow: -5px 2px 5px #888888;
+}
+#rate_btn{
+	color: white;
+	background-color: #0d3752;
+}
+.dash_img{
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+}
+.avatar-zone{
+	position: relative;
+	top: 20px;
+    width:140px;
+    height:140px;
+    border-radius: 50%;
+    margin: auto;
+    background:url("../img/user.png");
+    background-size: 140px 140px;
+}
+.avatar-zone:hover img{
+	opacity: 0.4;
+	transition: 0.6s;
+}
+.upload_btn{
+	margin-top: 30px;
+    position: absolute;
+    z-index: 5;
+    left: 35%;
+    width: 20px;
+    opacity: 0;
+}
+.overlay-layer{
+	margin-top: 30px;
+	position: absolute;
+    margin-left: 34%;
+}
+.overlay-layer button{
+	width: 100px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: white!important;
+    background-color: #0d3752;
+    border: none;
+    height: 20px;
+    text-align: center;
 }
 
 

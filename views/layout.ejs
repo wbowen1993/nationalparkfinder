@@ -14,11 +14,18 @@
 			}
 			.dash_btn{
 				position: absolute;
-				height: 70px;
-				float: right;				
-				top: 10px;
+				height: 100%;
+				float: right;	
 				border: none;
 				background: transparent;
+			}
+			.dash_btn:hover{
+				background-color: #ff0088;
+				transition: 0.8s;
+			}
+			.dash_btn:hover a{
+				font-size: 22px;
+				transition: 0.4s;
 			}
 			#signin_div{
 				display: inline;
@@ -35,7 +42,7 @@
 			    right: 50px;
 			}
 			#dashboard{
-				width: 110px;
+				width: 130px;
 				right: 160px;
 			}
 			#navbar{
@@ -51,6 +58,15 @@
 				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 				width:100%;
 			}
+			#nav-icon{
+				height:50px;
+				width:50px;
+				float: right;
+				position: relative;
+				right: 300px;
+				top:20px;
+				border-radius: 50%;
+			}
 		</style>
 	</head>
 	<body>
@@ -59,14 +75,29 @@
 		    position: relative;left: 48%;
 		    text-decoration:none!important"><img src="../img/logo.png" style="height:72px;margin-top:10px"></a>
 		    <div id="signin_div">
-			    <img src="../img/login.png" style="height:50px;width:50px;float: right;position: relative;right: 230px;top:20px">
+			    <img src="../img/login.png" style="height:50px;width:50px;float: right;position: relative;right: 260px;top:20px">
 			    <button id="login_btn" class="dash_btn"><a href="/login">Log in</a></button>
 		    </div>
 		    <div id="logout_div">
-			    <img src="../img/logout.png" style="height:50px;width:50px;float: right;position: relative;right: 300px;top:20px">
+			    <img src="../img/logout.png" id="nav-icon">
 			    <button id="dashboard" class="dash_btn"><a href="/profile">Dashboard</a></button>
 			    <button id="logout_btn" class="dash_btn"><a href="/logout">Log out</a></button>
 		    </div>
 		</nav>
+		<script type="text/javascript">
+			var profile_img = <%-JSON.stringify(profile_img)%>;
+			var new_str = "";
+			if(profile_img.length>5){				
+				for(var i = 0;i<profile_img.length;i++){
+					if(profile_img[i]=='\\')
+						new_str+="/";
+					else
+						new_str+=profile_img[i];
+				}
+				new_str = new_str.substring(3);
+				new_str = ".."+new_str;
+				document.getElementById('nav-icon').src = new_str;
+			}
+		</script>
 	</body>
 </html>

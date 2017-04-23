@@ -8,6 +8,8 @@ var keys = {"api_key": "338ad28fc7b797a4836746d87db99105"}
 flickr = new Flickr(keys);
 var mongoose = require('mongoose');
 
+var User = require('../model/user');
+
 var Yelp = require('yelp');
 var yelp = new Yelp({
   consumer_key: 'E_rk7aM7tlaNP6_EpP5OPw',
@@ -24,6 +26,7 @@ var client = new Twitter({
   access_token_secret: 'BHq7H0sfpvbo2x73oYMwWRfgVb0V6dYiurFpHjGVpgjcw'
 });
 
+var User_fav = require('../model/user_fav');
 var User_rating = require('../model/user_rating');
 
 // mongoose.connect('mongodb://cis550:11111111@ds161630.mlab.com:61630/users');
@@ -217,16 +220,42 @@ router.get('/park/:park_name',function(req,res,next){
 	console.log("param:"+req.params.park_name);
 	var session = "false";
     var faved = "false";    
+    var rated = "false";
+    var profile_img = "";
+    var scene = -1;
+    var act = -1;
+    var exp = -1;
+    var date = "";
+    var days = "";
+    var tags = [];
 	var key_words = req.params.park_name;
 	decodeURI(key_words);
 
     if(req.session&&req.session.user){
       	session = "true";
-      	User_rating.findOne({email:req.session.user.email},function(err,user_fav){
-      	if(!user_fav);
+      	User.findOne({email:req.session.user.email},function(err,user){
+      		if(!user);
+	        else{
+	          profile_img = user.profile_img;
+	        }
+      	});
+      	User_fav.findOne({email:req.session.user.email},function(err,user_fav){
+      		if(!user_fav);
       		else{
       			if(user_fav.park_name.indexOf(key_words)!=-1)
 	      			faved = "true";
+      		}
+      	});
+      	User_rating.findOne({email:req.session.user.email,park_name:key_words},function(err,user_rating){
+      		if(!user_rating);
+      		else{
+      			rated = "true";
+      			scene = user_rating.scene_rating;
+      			act = user_rating.act_rating;
+      			exp = user_rating.exp_rating;
+      			date = user_rating.date;
+      			days = user_rating.days;
+      			tags = user_rating.tag;
       		}
       	});
     }
@@ -318,7 +347,7 @@ router.get('/park/:park_name',function(req,res,next){
 					    	lat:lat[0],lon:lon[0],description:description[0],directions_info:directions_info[0],
 						    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
 		                    usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,
-		                    camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon,session:session,faved:faved});
+		                    camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon,session:session,faved:faved,rated:rated,scene:scene,act:act,exp:exp,date:date,days:days,tags:tags,profile_img:profile_img});
 					});
 	        });
 		});
@@ -326,66 +355,112 @@ router.get('/park/:park_name',function(req,res,next){
 });
 
 router.post('/park/:park_name',function(req,res,next){
-	console.log("param:"+req.params.park_name);
-	var session = "false";
-    var faved = "false";
 	var key_words = req.params.park_name;
 	decodeURI(key_words);
     if(req.session&&req.session.user){
-      	session = "true";
-      	User_rating.findOne({email:req.session.user.email},function(err,user_fav){
-	      	if(!user_fav){
-	      		var park_name = [];
-	      		park_name.push(key_words);
-				var user_rating = new User_rating({
-					email:req.session.user.email,
-					park_name:park_name
-				});
-				user_rating.save(function(err){
-					if(err){
-						console.log(err);
-					}
-					res.redirect('/park/'+req.params.park_name);
-				});
-	      	}
-	  		else{
-	  			var park_name = user_fav.park_name;
-	  			console.log(user_fav.park_name+"-----"+key_words);
-	  			if(park_name.indexOf(key_words)!=-1){
-	  				if(park_name.length==1){
-	  					User_rating.findOneAndRemove({email:req.session.user.email},function(err){
-	  						if(err){
-								console.log(err);
-							}
-							res.redirect('/park/'+req.params.park_name);
-	  					});
-	  				}
-  					else{
-  						var new_park_name = [];
-		  				for(var i = 0;i<park_name.length;i++){
-		  					if(park_name[i]!=key_words)
-		  						new_park_name.push(park_name[i]);
-		  				}
-		  				User_rating.findOneAndUpdate({email:req.session.user.email},{email:req.session.user.email,park_name:new_park_name},function(err){
-	  						if(err){
-								console.log(err);
-							}
-							res.redirect('/park/'+req.params.park_name);
-	  					});
-  					}
-	  			}
-	  			else{
-	  				park_name.push(key_words);
-	  				console.log(park_name);
-	  				User_rating.findOneAndUpdate({email:req.session.user.email},{email:req.session.user.email,park_name:park_name},function(err){
-  						if(err){
+    	if(req.body.operation=="fav"){
+    		User_fav.findOne({email:req.session.user.email},function(err,user_fav){
+		      	if(!user_fav){
+		      		var park_name = [];
+		      		park_name.push(key_words);
+					var user_fav = new User_fav({
+						email:req.session.user.email,
+						park_name:park_name
+					});
+					user_fav.save(function(err){
+						if(err){
 							console.log(err);
 						}
 						res.redirect('/park/'+req.params.park_name);
-  					});
-	  			}
-	  		}
-      	});
+					});
+		      	}
+		  		else{
+		  			var park_name = user_fav.park_name;
+		  			console.log(user_fav.park_name+"-----"+key_words);
+		  			if(park_name.indexOf(key_words)!=-1){
+		  				if(park_name.length==1){
+		  					User_fav.findOneAndRemove({email:req.session.user.email},function(err){
+		  						if(err){
+									console.log(err);
+								}
+								res.redirect('/park/'+req.params.park_name);
+		  					});
+		  				}
+	  					else{
+	  						var new_park_name = [];
+			  				for(var i = 0;i<park_name.length;i++){
+			  					if(park_name[i]!=key_words)
+			  						new_park_name.push(park_name[i]);
+			  				}
+			  				User_fav.findOneAndUpdate({email:req.session.user.email},{email:req.session.user.email,park_name:new_park_name},function(err){
+		  						if(err){
+									console.log(err);
+								}
+								res.redirect('/park/'+req.params.park_name);
+		  					});
+	  					}
+		  			}
+		  			else{
+		  				park_name.push(key_words);
+		  				console.log(park_name);
+		  				User_fav.findOneAndUpdate({email:req.session.user.email},{
+		  					email:req.session.user.email,
+		  					park_name:park_name},function(err){
+	  						if(err){
+								console.log(err);
+							}
+							res.redirect('/park/'+req.params.park_name);
+	  					});
+		  			}
+		  		}
+	      	});
+    	}
+      	else{
+      		User_rating.findOne({email:req.session.user.email,park_name:key_words},function(err,user_rating){
+      			if(!user_rating){
+      				var tags = (req.body.tag).split(";");
+      				var user_rating = new User_rating({
+      					email:req.session.user.email,
+      					park_name:key_words,
+      					scene_rating:req.body.scene,
+						act_rating:req.body.act,
+						exp_rating:req.body.exp,
+						date:req.body.date,
+						days:req.body.days,
+						tag:tags
+      				});
+					user_rating.save(function(err){
+						if(err){
+							console.log(err);
+						}
+						res.redirect('/park/'+req.params.park_name);
+					});
+      			}
+      			else{
+      				var tags = (req.body.tag).split(";");
+      				if(tags.length==1&&tags[0]=="")
+      					tags = [];
+      				User_rating.findOneAndUpdate({email:req.session.user.email,park_name:key_words},{
+      					email:req.session.user.email,
+      					park_name:key_words,
+      					scene_rating:req.body.scene,
+						act_rating:req.body.act,
+						exp_rating:req.body.exp,
+						date:req.body.date,
+						days:req.body.days,
+						tag:tags
+      				},function(err){
+						if(err){
+							console.log(err);
+						}
+						res.redirect('/park/'+req.params.park_name);
+					});
+      			}
+      		});
+      	}
+    }
+    else{
+    	res.redirect('/login');
     }
 });
 

@@ -53,5 +53,20 @@
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+			var profile_img = <%-JSON.stringify(profile_img)%>;
+			var new_str = "";
+			if(profile_img.length>5){				
+				for(var i = 0;i<profile_img.length;i++){
+					if(profile_img[i]=='\\')
+						new_str+="/";
+					else
+						new_str+=profile_img[i];
+				}
+				new_str = new_str.substring(3);
+				new_str = ".."+new_str;
+				document.getElementById('nav-icon').src = new_str;
+			}
+		</script>
 	</body>
 </html>
