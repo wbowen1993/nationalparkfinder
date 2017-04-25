@@ -86,7 +86,7 @@ router.get('/login',function(req,res,next){
 
 router.get('/signup',function(req,res,next){
 	// mongoose.connect
-	res.render('signup',{msg:"",profile_img:profile_img:""});
+	res.render('signup',{msg:"",profile_img:""});
 });
 
 router.get('/profile',function(req,res,next){
@@ -254,7 +254,7 @@ router.post('/login',function(req,res,next){
 	User.findOne({email:req.body.email},function(err,user){
 		if(!user){
 			// mongoose.connection.close();
-			res.render('login',{msg:"The user doesn't exist!"});
+			res.render('login',{msg:"The user doesn't exist!",profile_img:""});
 		}
 		else{
 			if(bcrypt.compareSync(req.body.password, user.password)){
@@ -264,7 +264,7 @@ router.post('/login',function(req,res,next){
 			}
 			else{
 				// mongoose.connection.close();
-				res.render('login',{msg:"Password incorrect!"});
+				res.render('login',{msg:"Password incorrect!",profile_img:""});
 			}
 		}
 	});
@@ -284,10 +284,10 @@ router.post('/signup',function(req,res,next){
 			if(err.code===11000){
 				msg = "The email address has been registered.";
 			}
-			res.render('signup',{error:msg});
+			res.render('signup',{msg:msg,profile_img:""});
 		}
-		// mongoose.connection.close();
-		res.redirect('/login');
+		else
+			res.redirect('/login');
 	});
 });
 

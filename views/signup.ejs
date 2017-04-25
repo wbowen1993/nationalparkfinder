@@ -3,13 +3,42 @@
 		<title>Sign Up</title>
 		<link rel="stylesheet" type="text/css" href="../css/signup.css">
 		<link href="https://fonts.googleapis.com/css?family=Palanquin+Dark" rel="stylesheet">
+		<script type="text/javascript">
+			function validate(){
+				var firstname = document.forms['regist_form']['firstname'].value;
+				var lastname = document.forms['regist_form']['lastname'].value;
+				var email = document.forms['regist_form']['email'].value;
+				if(!validateEmail(email)){
+					alert('Please type valid email address!');
+					return false;
+				}
+				if(firstname.length==0){
+					alert('Please type valid firstname!');
+					return false;
+				}	
+				else if(lastname.length==0){
+					alert('Please type valid lastname!');
+					return false;
+				}
+				else
+					return true;
+			}
+			function validateEmail(email) {
+				var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return re.test(email);
+			}
+		</script>
 	</head>
 	<body>
 	    <% include ../views/layout %>
 		<div id="form">
 			<div id="signup_div">
 				<h1 id="signup_banner">Come and Join Us!</h1>
-				<form class="form" action="/signup" method="POST" id="signup">
+				<% if(msg!=""){%>
+					<p id="error"><img src="../img/error.png" style="width:24px;height:24px;position: relative;
+					    top: 6px;left: -10px;"><%= msg%></p>
+				<%}%>
+				<form class="form" action="/signup" method="POST" id="signup" name="regist_form" onsubmit="return validate()">
 					<input type="text" name="email" placeholder="Email Address" class="email">
 					<input type="password" name="password" placeholder="password" class="password">
 					<input type="text" name="lastname" placeholder="Last Name" class="lastname">

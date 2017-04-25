@@ -95,8 +95,12 @@
 			function validateForm(){
 				var days = document.forms['rating_form']['days'].value;
 				var date = document.forms['rating_form']['date'].value;
-				if(days.length==0||date.length==0||!days.isInteger()||days<1){
-					alert("!!!");
+				if(date.length!=10||!((date.substring(0,2)).isInteger())||!((date.substring(3,5)).isInteger())||!((date.substring(7)).isInteger())||date[2]!='/'||date[5]!='/'){
+					alert("Please type valide date!!");
+					return false;
+				}
+				else if(days.length==0||!days.isInteger()||days<1){
+					alert("Please type valide date!!");
 					return false;
 				}
 				else{

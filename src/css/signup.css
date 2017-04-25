@@ -20,7 +20,6 @@ button{
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border:none;
-	position: absolute;
 	bottom:0;
 	background-color: #0d3752;
 	font-size: 24px;
@@ -30,7 +29,19 @@ button{
 a{
 	color: white!important;
 	text-decoration: none;
-}button:focus {
+}
+p{
+    margin: auto;
+    text-align: center;
+    padding-top: 6px;
+    background: #f4a4a4;
+    width: 80%;
+    border-radius: 3px;
+    padding-bottom: 6px;
+    font-size: 14px;
+    font-family: 'Palanquin Dark', sans-serif;
+}
+button:focus {
 	outline:0;
 }
 button:hover{
@@ -42,18 +53,17 @@ input[type=text],input[type=password]{
 	width:60%;
 	position: relative;
 	left:20%;
-	margin: auto;
+	margin-top: 20px;
 	padding: 10px 12px;
 	border-radius: 4px;
 }
 input[type=submit]{
 	width:100%;
-	position: absolute;
 	box-shadow: none;
 	border:0;
 	left:0;
 	height:70px;
-	bottom: 70px;
+	margin-top: 20px;
 	background-color: #3cb371;
 	font-size: 24px;
 	font-family: 'Palanquin Dark', sans-serif;
@@ -63,24 +73,16 @@ input[type=submit]{
 input[type=submit]:hover{
 	background-color: #53c697;
 }
-.email{
-	top:30px;
+form{
+	margin-bottom: 0;
 }
 .password{
 	display: inline;
-	top:50px;
-}
-.lastname{
-	top:70px;
-}
-.firstname{
-	top:90px;
 }
 #form{
 	position: relative;
 	top:25%;
 	width: 25%;
-	height:500px;
 	margin: auto;
 	background-color: rgba(245,245,220,1);
 	border-radius: 10px;
