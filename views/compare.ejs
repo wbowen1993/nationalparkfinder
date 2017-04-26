@@ -1,16 +1,20 @@
 <html>
-	<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="../css/compare.css">
-	<script>  
-		function sort(){
-			// console.log(window.location.href+"&method="+document.getElementById('select').value);
-			var origin_url = window.location.href;
-			if(origin_url.indexOf("&method=")!=-1){
-				origin_url = origin_url.substring(0,origin_url.indexOf("&method="));
+	<head>
+		<title>Park Compare</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../css/compare.css">
+		<script>  
+			function sort(){
+				// console.log(window.location.href+"&method="+document.getElementById('select').value);
+				var origin_url = window.location.href;
+				if(origin_url.indexOf("&method=")!=-1){
+					origin_url = origin_url.substring(0,origin_url.indexOf("&method="));
+				}
+				window.location.href = origin_url+"&method="+document.getElementById('select').value;
 			}
-			window.location.href = origin_url+"&method="+document.getElementById('select').value;
-		}
-	</script>
+		</script>
+	</head>
 	<body>
 		<% include ../views/layout %>
 		<script type="text/javascript">

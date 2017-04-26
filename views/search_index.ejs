@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 		<title>Search Result</title>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Anton|Slabo+27px" rel="stylesheet">
@@ -36,8 +37,10 @@
 			<table id="result_table" class="table table-condensed" style="margin-bottom: 50px">
 			</table>
 		</div>
-		<button class="btn btn-info" id = "back-btn"><a href="/" style="
-			color: white!important">Back</a></button>
+		<div id="back-div">
+			<button class="btn btn-info" id = "back-btn"><a href="/" style="
+				color: white!important">Back</a></button>
+		</div>
 		<script>
 			function changeOpacity(){
 				document.getElementById('img').style.opacity='0.7';
@@ -162,9 +165,12 @@
 				        map.fitBounds(bounds);
 					});
 					document.getElementById("back-btn").style.display = "none";
+					document.getElementById("compare").style.display = "block";
 				}
 				else{
 					document.getElementById("result_table").style.margin = "0 0 0 0";
+					document.getElementById("back-btn").style.display = "block";
+					document.getElementById("compare").style.display = "none";
 				}
 		    }
 	    </script>

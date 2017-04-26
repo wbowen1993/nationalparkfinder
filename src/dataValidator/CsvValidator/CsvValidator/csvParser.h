@@ -1,6 +1,19 @@
 #ifndef _CSV_PARSER_H_
 #define _CSV_PARSER_H_
 
+#include <string>
+
+namespace Utils
+{
+	void toLowerCase(char* b);
+	void removeWord(char* b, char* word);
+	bool stringHasDigit(char* str);
+	bool stringHasOnlyDigit(char* str);
+	bool stringHasChars(char* str);
+	bool stringIsLegalText(char* str);
+	void addTimeStamp(char *buff);
+};
+
 class CSVIterator
 {
 public:
@@ -17,7 +30,7 @@ public:
 
 private:
 
-	void cleanData();
+	void cleanData(); // Remove ',' not separating any cells.
 
 	char* m_cursor;
 	char m_curCell[MAX_CELL_LEN];

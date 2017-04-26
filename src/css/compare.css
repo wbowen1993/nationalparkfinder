@@ -1,4 +1,6 @@
 body{
+	min-width: 1440px;
+	min-height: 768px;
 	margin: 0;
 	background: url("../img/Bryce_milky.jpg");
 	top:90px;

@@ -132,7 +132,7 @@ router.get('/search_index',function(req,res,next)
                 if(park_name.length==0)
                     res.render('search_index',{activity_q: activity_q,state_q: state_q,park_code:park_code,park_name:park_name,
                         park_activities_code_array:park_activities_code_array,latitude:latitude,longitude:longitude,website:website,
-                        image_url:image_url,session:session});
+                        image_url:image_url,session:session,profile_img:profile_img});
                 else{
                     for(var i=0;i<park_name.length;i++){
                         var activities_code = [];

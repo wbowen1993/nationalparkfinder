@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 		<title><%= key_words%></title>
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<!-- font -->
@@ -338,6 +339,24 @@
 			<% } %>
 			</table>
 			<% } %>
+
+			
+			<% if(closest_name.length!=0){%>
+			<h2>Closest Restaurant to Visitor Center</h2>
+			<hr/>
+			<table style="width:100%;border-collapse: initial;margin-bottom:150px" align="center" id="restaurant">
+			
+			<tr style="height:120px">
+				<td style="width:15%"><img src="<%= closest_url[0]%>" style="border-radius: 5px;height:100px;width: 100px"></td>
+				<td style="width:30%"><%= closest_name[0]%></td>
+				<td style="width:10%"><img src="<%= closest_rating[0]%>"></td>
+				<td><%= closest_addr[0]%></td>
+			</tr>
+			
+			</table>
+			<% } %>
+
+
 			<h2>Map</h2>
 			<hr/>
 			<div id="map"></div>

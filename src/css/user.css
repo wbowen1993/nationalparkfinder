@@ -4,9 +4,6 @@ body{
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover;
-	margin: 0;
-	min-width: 1440px;
-	min-height: 768px;
 }
 h1{
 	text-align: center;
@@ -17,32 +14,14 @@ h1{
 	font-family: 'Palanquin Dark', sans-serif;
 }
 button{
-	width:100%;
+	width:50%;
 	height:70px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	border-radius: 0;
 	border:none;
-	position: absolute;
-	bottom:0;
-	background-color: #0d3752;
+	color: white!important;
 	font-size: 24px;
 	font-family: 'Palanquin Dark', sans-serif;
 	cursor: pointer;
-}
-a{
-	color: white!important;
-	text-decoration: none;
-}
-p{
-    margin: auto;
-    text-align: center;
-    padding-top: 6px;
-    background: #f4a4a4;
-    width: 80%;
-    border-radius: 3px;
-    padding-bottom: 6px;
-    font-size: 14px;
-    font-family: 'Palanquin Dark', sans-serif;
 }
 button:focus {
 	outline:0;
@@ -67,22 +46,24 @@ input[type=submit]{
 	border:0;
 	left:0;
 	height:70px;
-	bottom: 70px;
+	bottom: 0;
 	background-color: #3cb371;
 	font-size: 24px;
 	font-family: 'Palanquin Dark', sans-serif;
 	color: white!important;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 	cursor: pointer;
 }
 input[type=submit]:hover{
 	background-color: #53c697;
 }
-.email{
-	top:20px;
+.username{
+	top:30px;
 }
 .password{
 	display: inline;
-	top:40px;
+	top:60px;
 }
 #form{
 	position: relative;
@@ -94,6 +75,39 @@ input[type=submit]:hover{
 	border-radius: 10px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+#signup{
+	/*display: none;*/
+	height:250px;
+}
+#signin{
+	position: relative;
+	margin:auto;
+	height:250px;
+}
+#head{
+	/*background-color: #0d3752;*/
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	width: 100%;
+	height:70px;
+	/*vertical-align: center;*/
+}
+#signup_btn{
+	display: inline;
+	position: absolute;
+	border-top-right-radius: 5px;
+	background-color: #0d3752;
+}
+#signin_btn{
+	border-top-left-radius: 5px;
+	background-color: #cc0066;
+}
+#signup_div{
+	display: none;
+}
 #signin_banner{
 	color:#cc0066;
+}
+#signup_banner{
+	color:#0d3752;
 }

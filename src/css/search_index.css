@@ -6,6 +6,8 @@
 	height:75%;
 }
 body{
+	min-width: 1440px;
+	min-height: 768px;
 	background-color: #e6e9ef;
 	font-family: 'Slabo 27px', serif;
 	/*text-align: center;*/
@@ -71,6 +73,7 @@ a{
 	text-decoration: none!important;
 }
 #back-btn{
+	margin:auto;
 	font-size: 24;
 	background-color: #0D3752;
 	border:#0D3752;
@@ -86,4 +89,8 @@ a{
 }
 #compare:focus{
 	outline: 0;
+}
+#back-div{
+	margin-top: 20px;
+	margin-bottom: 20px;
 }

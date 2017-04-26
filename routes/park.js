@@ -50,7 +50,7 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
         usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
         park_alert_t,park_alert_d,park_caution_t,park_caution_d,
         restaurant_name,restaurant_rating,restaurant_address,restaurant_url,restaurant_lat,restaurant_lon,
-        camp_names,camp_phones,camp_lat,camp_lon,weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,
+        camp_names,camp_phones,camp_lat,camp_lon,weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,closest_name,closest_addr,closest_rating,closest_url,
         callback){
 	lat.length = 0;
 	lon.length = 0;
@@ -177,7 +177,36 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
 							            		camp_lon.push(rows[i].longitude);
 							            		camp_phones.push(rows[i].phone);
 							            	}
-							            	callback();
+							            	query = "DROP VIEW IF EXISTS vvvv;";
+							            	connection.query(query, function(err, rows, fields) {
+							            		if (err) console.log(err);
+							            		else{	
+								            		query = "CREATE VIEW vvvv AS (SELECT B.park_id, B.business_id, B.name, B.address, B.rating, B.image_url, B.longitude, B.latitude, V.GPSLong, V.GPSLat, MIN(sqrt((B.longitude - V.GPSLong)*(B.longitude - V.GPSLong) + (B.latitude - V.GPSLat)*(B.latitude - V.GPSLat))) AS distance FROM Business B INNER JOIN NationalPark P ON B.park_id = P.Id INNER JOIN VisitorCenter V ON P.Id = V.NPId GROUP BY B.park_id);";
+								            		connection.query(query, function(err, rows, fields) {
+								            			if (err) console.log(err);
+								            			else{
+								            				query = "SELECT name, address, rating, image_url FROM vvvv WHERE park_id = "+NpId+";";
+									                		connection.query(query, function(err, rows, fields) {
+									                			if (err) console.log(err);
+											            		else{
+											            			if(rows.length != 0) {
+											            				closest_name.push(rows[0].name);
+											            				closest_addr.push(rows[0].address);
+											            				var str = rows[0].rating.toString();
+											            				if(str.indexOf(".5")!=-1){
+											            					closest_rating.push("../img/yelp_rating/large_"+str[0].toString()+"_half.png");
+											            				} else {
+										            						closest_rating.push("../img/yelp_rating/large_"+str[0].toString()+".png");
+											            				}
+											            				closest_url.push(rows[0].image_url);
+									            						callback();
+									            					}
+										            			}
+										            		});
+									            		}
+									            	});
+						            			}	
+											});
 							            }
 							        });
 					            }
@@ -301,6 +330,11 @@ router.get('/park/:park_name',function(req,res,next){
 	var camp_lat = [];
 	var camp_lon = [];
 
+	var closest_name = [];
+	var closest_rating = [];
+	var closest_url = [];
+	var closest_addr = [];
+
 	var t_text = [];
 	var t_username = [];
 	var t_screenname = [];
@@ -318,7 +352,7 @@ router.get('/park/:park_name',function(req,res,next){
 		        usrActivity_name, usrActivity_type, usrActivity_descr, usrActivity_lat, usrActivity_long,
 		        park_alert_t,park_alert_d,park_caution_t,park_caution_d,
 		        restaurant_name,restaurant_rating,restaurant_address,restaurant_url,restaurant_lat,restaurant_lon,
-		        camp_names,camp_phones,camp_lat,camp_lon,weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,
+		        camp_names,camp_phones,camp_lat,camp_lon,weather,min_temperature,max_temperature,weather_code,time,humidity,sunrise,sunset,closest_name,closest_addr,closest_rating,closest_url,
 		        function(){
 	        		client.get('search/tweets', {q: tweet_q,count:500}, function(error, tweets, response) {
 						var count = 0;
@@ -347,7 +381,8 @@ router.get('/park/:park_name',function(req,res,next){
 					    	lat:lat[0],lon:lon[0],description:description[0],directions_info:directions_info[0],
 						    visitorCenter_name:visitorCenter_name, visitorCenter_phone:visitorCenter_phone, visitorCenter_website:visitorCenter_website, visitorCenter_lat:visitorCenter_lat, visitorCenter_long:visitorCenter_long,
 		                    usrActivity_name:usrActivity_name, usrActivity_type:usrActivity_type, usrActivity_descr:usrActivity_descr,usrActivity_lat:usrActivity_lat,usrActivity_long:usrActivity_long,
-		                    camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon,session:session,faved:faved,rated:rated,scene:scene,act:act,exp:exp,date:date,days:days,tags:tags,profile_img:profile_img});
+		                    camp_names:camp_names,camp_phones:camp_phones,camp_lat:camp_lat,camp_lon:camp_lon,
+		                    closest_name:closest_name,closest_rating:closest_rating,closest_url:closest_url,closest_addr:closest_addr,session:session,faved:faved,rated:rated,scene:scene,act:act,exp:exp,date:date,days:days,tags:tags,profile_img:profile_img});
 					});
 	        });
 		});
