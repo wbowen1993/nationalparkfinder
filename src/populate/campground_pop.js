@@ -50,8 +50,8 @@ function camp_collect(phones,names,lats,lons,ids,id,callback){
 	    		if(body["RECDATA"][j]["GEOJSON"]!=undefined&&(body["RECDATA"][j]["FacilityName"].indexOf("Camp")!=-1||body["RECDATA"][j]["FacilityName"].indexOf("CAMP")!=-1)){
 	    			phones.push(body["RECDATA"][j]["FacilityPhone"]);
 		    		names.push(body["RECDATA"][j]["FacilityName"]);
-		    		lats.push(body["RECDATA"][j]["GEOJSON"]["COORDINATES"][0]);
-		    		lons.push(body["RECDATA"][j]["GEOJSON"]["COORDINATES"][1]);					    		
+		    		lats.push(body["RECDATA"][j]["GEOJSON"]["COORDINATES"][1]);
+		    		lons.push(body["RECDATA"][j]["GEOJSON"]["COORDINATES"][0]);					    		
 	    		}
     		}
 		    callback();

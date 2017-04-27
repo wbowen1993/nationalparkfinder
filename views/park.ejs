@@ -490,6 +490,7 @@
 				    var b_name;
 				    b_name = <%- JSON.stringify(restaurant_name)%>;
 				    for(var i = 0;i<r_lat.length;i++){
+						console.log(r_lat[i],r_lon[i]);
 				    	var pos = {lat:parseFloat(r_lat[i]),lng:parseFloat(r_lon[i])};
 				    	var r_marker = new google.maps.Marker({
 				    		map:map,
@@ -510,16 +511,19 @@
 				    camp_names = <%- JSON.stringify(camp_names)%>;
 				    var camp_lat;
 				    camp_lat = <%- JSON.stringify(camp_lat)%>;
+				    console.log(camp_lon);
 				    var camp_lon;
 				    camp_lon = <%- JSON.stringify(camp_lon)%>;
+					console.log(camp_lat,camp_lon);
 					for(var i = 0;i<camp_lat.length;i++){
-				    	var pos = {lat:parseFloat(camp_lat[i]),lng:parseFloat(camp_lon[i])};
+						console.log(camp_lat[i],camp_lon[i]);
+				    	var new_pos = {lat:parseFloat(camp_lat[i]),lng:parseFloat(camp_lon[i])};
 				    	var c_marker = new google.maps.Marker({
 				    		map:map,
-				    		position:pos,
+				    		position:new_pos,
 				    		icon:"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld="+(i+1)+"|9ACD32|000000"
 				    	});
-				    	bounds.extend(pos);
+				    	bounds.extend(new_pos);
 				    	var contentString = '<h4>'+camp_names[i]+'</h4>';
 				    	google.maps.event.addListener(c_marker, 'click', (function(marker,contentString) {
 							return function() {

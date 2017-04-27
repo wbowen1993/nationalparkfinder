@@ -171,6 +171,7 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
 					                connection.query(query, function(err, rows, fields) {
 							            if (err) console.log(err);
 							            else{
+							            	console.log(query);
 							            	for(var i = 0;i<rows.length;i++){
 							            		camp_names.push(rows[i].name);
 							            		camp_lat.push(rows[i].latitude);
@@ -199,9 +200,10 @@ function mysqlQuery(park_name,lat,lon,description,directions_info,
 										            						closest_rating.push("../img/yelp_rating/large_"+str[0].toString()+".png");
 											            				}
 											            				closest_url.push(rows[0].image_url);
-									            						callback();
+									            						
 									            					}
 										            			}
+										            			callback();
 										            		});
 									            		}
 									            	});
