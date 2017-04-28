@@ -8,7 +8,7 @@ var User = require('../model/user');
 var connection = mysql.createConnection({
   host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
   user     : 'adminUser',
-  password : 'yourPassword986274', // This is not the correct password! Please enter your own.
+  password : '', // This is not the correct password! Please enter your own.
   database : 'NationalParksMySql'
 });
 
