@@ -15,7 +15,7 @@ var park_code = [];
 var connection = mysql.createConnection({
   host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
   user     : 'adminUser',
-  password : '', // This is not the correct password! Please enter your own.
+  password : 'ThatsNotAPassword629451!', // This is not the correct password! Please enter your own.
   database : 'NationalParksMySql'
 });
 

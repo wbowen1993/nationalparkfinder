@@ -10,12 +10,12 @@ var User = require('../model/user');
 var User_fav = require('../model/user_fav');
 var User_rating = require('../model/user_rating');
 
-mongoose.connect('mongodb://cis550:<password>@ds161630.mlab.com:61630/users');
+mongoose.connect('mongodb://cis550:11111111@ds161630.mlab.com:61630/users');
 
 var connection = mysql.createConnection({
   host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
   user     : 'adminUser',
-  password : '', // This is not the correct password! Please enter your own.
+  password : 'ThatsNotAPassword629451!', // This is not the correct password! Please enter your own.
   database : 'NationalParksMySql'
 });
 

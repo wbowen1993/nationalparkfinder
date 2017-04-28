@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
   host     : 'db-group8-mysql.cd4nksdzz6ad.us-east-1.rds.amazonaws.com',
   user     : 'adminUser',
-  password : 'yourPassword986274',
+  password : 'ThatsNotAPassword629451!',
   database : 'NationalParksMySql'
 });
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
